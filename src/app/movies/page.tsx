@@ -4,84 +4,80 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { SearchBar } from '@/components/SearchBar'
 import { MovieList } from '@/components/MovieList'
-import { MovieCarousel } from '@/components/MovieCarousel'
-import { TrendingSection } from '@/components/TrendingSection'
 import { Button } from '@/components/ui/button'
 import { useMovieStore } from '@/store/movieStore'
 import { movieService, Movie } from '@/services/MovieService'
 import { cn } from '@/lib/utils'
-import Link from 'next/link'
-import { Play, Star, Clock, ChevronRight } from 'lucide-react'
 import { PageLoader } from '@/components/ui/loader'
-import { LatestTVShows } from '@/components/LatestTVShows'
-import { Footer } from '@/components/Footer'
 import { Navigation } from '@/components/Navigation'
-import { useAuth } from '@/contexts/AuthContext'
+import { Footer } from '@/components/Footer'
 
-export default function Home() {
-  const { currentUser, loading } = useAuth()
-  const [activeCategory, setActiveCategory] = useState<'popular' | 'top-rated' | 'now-playing'>('popular')
+export default function MoviesPage() {
   const { searchQuery } = useMovieStore()
-  const [carouselMovies, setCarouselMovies] = useState<Movie[]>([])
+  const [activeCategory, setActiveCategory] = useState<'popular' | 'top-rated' | 'now-playing' | 'upcoming'>('popular')
+  const [trendingMovies, setTrendingMovies] = useState<Movie[]>([])
 
-  // Fetch movies for carousel
   useEffect(() => {
-    const fetchMovies = async () => {
+    const fetchTrendingMovies = async () => {
       try {
         const response = await movieService.getTrendingMovies()
-        setCarouselMovies(response.results.slice(0, 5))
+        setTrendingMovies(response.results.slice(0, 5))
       } catch (error) {
-        console.error('Failed to fetch movies:', error)
+        console.error('Failed to fetch trending movies:', error)
       }
     }
 
-    fetchMovies()
+    fetchTrendingMovies()
   }, [])
 
   const categories = [
     { id: 'popular', label: 'Popular' },
     { id: 'top-rated', label: 'Top Rated' },
     { id: 'now-playing', label: 'Now Playing' },
+    { id: 'upcoming', label: 'Upcoming' },
   ] as const
-
-  if (loading) {
-    return <PageLoader message="Loading application..." />
-  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <Navigation />
 
-      {/* Hero Carousel Section */}
-      {!searchQuery && carouselMovies.length > 0 && (
-        <section className="relative h-[80vh]">
-          <MovieCarousel movies={carouselMovies} />
+      {!searchQuery && trendingMovies.length > 0 && (
+        <section className="relative h-[60vh] bg-gradient-to-r from-gray-900 to-gray-800">
+          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div className="relative container mx-auto px-4 py-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center"
+            >
+              <h1 className="text-5xl font-bold mb-4">Movies</h1>
+              <p className="text-xl text-gray-300 mb-8">
+                Discover the latest and greatest films
+              </p>
+              <div className="flex justify-center">
+                <SearchBar className="w-full max-w-md" />
+              </div>
+            </motion.div>
+          </div>
         </section>
       )}
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {/* Trending Section */}
-        {!searchQuery && (
-          <section className="mb-12">
-            <TrendingSection />
+        {searchQuery && (
+          <section className="mb-8">
+            <div className="mx-auto max-w-2xl">
+              <h2 className="mb-4 text-center text-3xl font-bold text-white">
+                Search Movies
+              </h2>
+              <p className="mb-6 text-center text-gray-400">
+                Find your favorite movies
+              </p>
+              <SearchBar className="w-full" />
+            </div>
           </section>
         )}
 
-        {/* Search Section */}
-        <section className="mb-8">
-          <div className="mx-auto max-w-2xl">
-            <h2 className="mb-4 text-center text-3xl font-bold text-white">
-              Discover Amazing Movies
-            </h2>
-            <p className="mb-6 text-center text-gray-400">
-              Search for your favorite movies or explore our curated collections
-            </p>
-            <SearchBar className="w-full" />
-          </div>
-        </section>
-
-        {/* Categories */}
         {!searchQuery && (
           <section className="mb-8">
             <div className="flex flex-wrap justify-center gap-2">
@@ -105,7 +101,6 @@ export default function Home() {
           </section>
         )}
 
-        {/* Movie List */}
         <section>
           {searchQuery ? (
             <div>
@@ -123,12 +118,8 @@ export default function Home() {
             </div>
           )}
         </section>
-
-        {/* Latest TV Shows Section */}
-        {!searchQuery && <LatestTVShows />}
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   )

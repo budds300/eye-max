@@ -1,0 +1,26 @@
+'use client'
+
+import React from 'react'
+import { MovieList } from '@/components/MovieList'
+import { PageLoader } from '@/components/ui/loader'
+
+export default function ActionMoviesPage() {
+  return (
+    <div className="min-h-screen bg-gray-900 text-white">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Action Movies</h1>
+          <p className="text-gray-400">Explore the latest and greatest action movies</p>
+        </div>
+        
+        <MovieList category="action" />
+      </div>
+    </div>
+  )
+}
+
+
+
+
+
+

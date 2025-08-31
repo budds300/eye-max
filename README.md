@@ -1,36 +1,188 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+# EyeMax - Movie Recommendation Application
+
+A modern, responsive movie recommendation application built with Next.js, TypeScript, and TailwindCSS. Discover and explore movies with personalized recommendations powered by the TMDB API.
+
+## Features
+
+- 🎬 **Movie Discovery**: Browse popular, top-rated, and now-playing movies
+- 🔍 **Smart Search**: Search movies by title with debounced input
+- 📱 **Responsive Design**: Beautiful UI that works on all devices
+- ⚡ **Fast Performance**: Optimized with caching and lazy loading
+- 🎨 **Modern UI**: Smooth animations and transitions with Framer Motion
+- 🔐 **Authentication**: GitHub OAuth integration with NextAuth.js
+- 📊 **Movie Details**: Comprehensive movie information including cast, crew, and recommendations
+- 🧪 **Testing**: Comprehensive Jest and React Testing Library tests
+- 🚀 **CI/CD**: Automated testing and deployment with GitHub Actions
+
+## Tech Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: TailwindCSS
+- **State Management**: Zustand
+- **Authentication**: NextAuth.js with GitHub OAuth
+- **API**: TMDB (The Movie Database)
+- **Testing**: Jest + React Testing Library
+- **Animations**: Framer Motion
+- **UI Components**: Custom components with Radix UI primitives
+- **Deployment**: Vercel
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- npm or yarn
+- GitHub account (for OAuth)
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd eye-max
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+Create a `.env.local` file in the root directory with the following variables:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+# TMDB API Configuration
+TMDB_API_KEY=af7a6cbc3b688695a9b6d9bf40b56b8e
+TMDB_BASE_URL=https://api.themoviedb.org/3
+TMDB_IMAGE_BASE_URL=https://image.tmdb.org/t/p
 
-## Learn More
+# NextAuth Configuration
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-key-here-change-in-production
 
-To learn more about Next.js, take a look at the following resources:
+# GitHub OAuth (for authentication)
+GITHUB_ID=your-github-client-id
+GITHUB_SECRET=your-github-client-secret
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Set up GitHub OAuth:
+   - Go to GitHub Settings > Developer settings > OAuth Apps
+   - Create a new OAuth App
+   - Set Homepage URL to `http://localhost:3000`
+   - Set Authorization callback URL to `http://localhost:3000/api/auth/callback/github`
+   - Copy the Client ID and Client Secret to your `.env.local` file
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5. Run the development server:
+```bash
+npm run dev
+```
 
-## Deploy on Vercel
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Available Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run test` - Run tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Run tests with coverage
+
+## Project Structure
+
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── api/               # API routes
+│   ├── movie/[id]/        # Movie details page
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx           # Home page
+├── components/            # React components
+│   ├── ui/               # Reusable UI components
+│   ├── MovieCard.tsx     # Movie card component
+│   ├── MovieDetails.tsx  # Movie details component
+│   ├── MovieList.tsx     # Movie list component
+│   └── SearchBar.tsx     # Search component
+├── services/             # API services
+│   └── MovieService.ts   # TMDB API service
+├── store/                # State management
+│   └── movieStore.ts     # Zustand store
+├── lib/                  # Utility functions
+│   └── utils.ts          # Common utilities
+└── __tests__/           # Test files
+    ├── MovieList.test.tsx
+    └── MovieDetails.test.tsx
+```
+
+## API Integration
+
+The application integrates with the TMDB API to fetch:
+- Popular, top-rated, and now-playing movies
+- Movie details with cast and crew information
+- Movie recommendations
+- Search functionality
+
+All API calls are cached for 5 minutes to improve performance.
+
+## Testing
+
+The application includes comprehensive tests for core components:
+
+- **MovieList**: Tests loading states, error handling, and movie rendering
+- **MovieDetails**: Tests movie information display and user interactions
+
+Run tests with:
+```bash
+npm run test
+```
+
+## Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy automatically
+
+### Manual Deployment
+
+1. Build the application:
+```bash
+npm run build
+```
+
+2. Start the production server:
+```bash
+npm run start
+```
+
+## CI/CD
+
+The project includes GitHub Actions workflow that:
+- Runs linting and tests on push
+- Deploys to Vercel when tests pass
+- Supports multiple Node.js versions
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Run tests and linting
+6. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
+
+## Acknowledgments
+
+- [TMDB](https://www.themoviedb.org/) for providing the movie data API
+- [Next.js](https://nextjs.org/) for the amazing React framework
+- [TailwindCSS](https://tailwindcss.com/) for the utility-first CSS framework
+- [Framer Motion](https://www.framer.com/motion/) for smooth animations
