@@ -54,25 +54,27 @@ Create a `.env.local` file in the root directory with the following variables:
 
 ```env
 # TMDB API Configuration
-TMDB_API_KEY=af7a6cbc3b688695a9b6d9bf40b56b8e
+TMDB_API_KEY=<your-api-key>
 TMDB_BASE_URL=https://api.themoviedb.org/3
 TMDB_IMAGE_BASE_URL=https://image.tmdb.org/t/p
 
-# NextAuth Configuration
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-secret-key-here-change-in-production
-
-# GitHub OAuth (for authentication)
-GITHUB_ID=your-github-client-id
-GITHUB_SECRET=your-github-client-secret
+# Firebase Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=your-firebase-api-key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
 ```
 
-4. Set up GitHub OAuth:
-   - Go to GitHub Settings > Developer settings > OAuth Apps
-   - Create a new OAuth App
-   - Set Homepage URL to `http://localhost:3000`
-   - Set Authorization callback URL to `http://localhost:3000/api/auth/callback/github`
-   - Copy the Client ID and Client Secret to your `.env.local` file
+4. Set up Firebase Authentication:
+   - Go to [Firebase Console](https://console.firebase.google.com/)
+   - Create a new project or use an existing one
+   - Enable Authentication in the Firebase console
+   - Add Email/Password and Google sign-in methods
+   - Get your Firebase configuration from Project Settings
+   - Copy the configuration values to your `.env.local` file
 
 5. Run the development server:
 ```bash
