@@ -66,7 +66,13 @@ describe("MovieList", () => {
   });
 
   it("renders loading state when loading", () => {
-    mockStore.loading = true;
+    // Mock the store to return loading state
+    (useMovieStore as jest.Mock).mockReturnValue({
+      ...mockStore,
+      loading: true,
+      movies: [],
+      error: null,
+    });
     render(<MovieList category="popular" />);
 
     expect(screen.getByText("Loading movies...")).toBeInTheDocument();
@@ -74,6 +80,8 @@ describe("MovieList", () => {
 
   it("renders error state when there is an error", () => {
     mockStore.error = "Failed to fetch movies";
+    mockStore.loading = false;
+    mockStore.movies = [];
     render(<MovieList category="popular" />);
 
     expect(screen.getByText("Error loading movies")).toBeInTheDocument();
@@ -82,6 +90,9 @@ describe("MovieList", () => {
   });
 
   it("renders empty state when no movies", () => {
+    mockStore.loading = false;
+    mockStore.error = null;
+    mockStore.movies = [];
     render(<MovieList category="popular" />);
 
     expect(screen.getByText("No movies found")).toBeInTheDocument();

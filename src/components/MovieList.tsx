@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+
 import { AlertCircle } from "lucide-react";
 import { MovieGridSkeleton } from "@/components/ui/loader";
 import { MovieCard } from "@/components/MovieCard";
@@ -27,15 +27,7 @@ interface MovieListProps {
   className?: string;
 }
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
+
 
 export const MovieList: React.FC<MovieListProps> = ({
   category = "popular",
@@ -213,17 +205,11 @@ export const MovieList: React.FC<MovieListProps> = ({
 
   return (
     <div className={cn("space-y-6", className)}>
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {displayMovies.slice(10, 30).map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
         </div>
-      </motion.div>
     </div>
   );
 };
