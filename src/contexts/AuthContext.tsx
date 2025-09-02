@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   User,
+  UserCredential,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
@@ -16,15 +17,15 @@ import { auth, googleProvider } from "@/lib/firebase";
 interface AuthContextType {
   currentUser: User | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<unknown>;
+  signIn: (email: string, password: string) => Promise<UserCredential>;
   signUp: (
     email: string,
     password: string,
     firstName: string,
     lastName: string,
-  ) => Promise<unknown>;
-  logout: () => Promise<unknown>;
-  signInWithGoogle: () => Promise<unknown>;
+  ) => Promise<UserCredential>;
+  logout: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signInWithDemo: () => Promise<void>;
 }
 

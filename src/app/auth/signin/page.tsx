@@ -94,7 +94,7 @@ export default function SignIn() {
       setError(
         error instanceof Error
           ? error.message
-          : `Failed to ${isSignUp ? "sign up" : "sign in"}`,
+          : `Failed to ${isSignUp ? "sign up" : " sign in"}`,
       );
     } finally {
       setIsLoading(false);

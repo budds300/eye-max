@@ -122,7 +122,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 };
 
 // Debounce utility function
-function debounce<T extends (...args: any[]) => any>(
+// Debounce utility function with proper generic types
+function debounce<T extends (...args: never[]) => void>(
   func: T,
   wait: number,
 ): (...args: Parameters<T>) => void {

@@ -101,6 +101,17 @@ export interface SearchResponse {
   total_results: number;
 }
 
+// Generic API response type
+export interface APIResponse<T> {
+  data: T;
+  timestamp: number;
+}
+
+// Generic parameters type for API requests
+export interface APIParams {
+  [key: string]: string | number | boolean | undefined;
+}
+
 export interface TVSearchResponse {
   page: number;
   results: TVShow[];
@@ -141,7 +152,7 @@ class MovieService {
 
   private getCacheKey(
     endpoint: string,
-    params: Record<string, unknown> = {},
+    params: APIParams = {},
   ): string {
     const sortedParams = Object.keys(params)
       .sort()
@@ -156,7 +167,7 @@ class MovieService {
 
   private async makeRequest<T>(
     endpoint: string,
-    params: Record<string, unknown> = {},
+    params: APIParams = {},
   ): Promise<T> {
     this.initialize();
 
@@ -164,7 +175,7 @@ class MovieService {
     const cached = this.cache.get(cacheKey);
 
     if (cached && this.isCacheValid(cached.timestamp)) {
-      return cached.data;
+      return cached.data as T;
     }
 
     try {

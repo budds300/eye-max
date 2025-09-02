@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+
 import { Star, Play, Calendar } from "lucide-react";
 import { TVShow } from "@/services/MovieService";
 import { movieService } from "@/services/MovieService";
@@ -27,9 +27,7 @@ export const TVShowCard: React.FC<TVShowCardProps> = ({ show }) => {
   };
 
   return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.2 }}
+    <div
       className="group relative bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
     >
       <Link href={`/tv-show/${show.id}`}>
@@ -87,6 +85,6 @@ export const TVShowCard: React.FC<TVShowCardProps> = ({ show }) => {
           )}
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 };
