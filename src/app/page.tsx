@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
 import { SearchBar } from '@/components/SearchBar'
 import { MovieList } from '@/components/MovieList'
 import { MovieCarousel } from '@/components/MovieCarousel'
@@ -10,8 +9,6 @@ import { Button } from '@/components/ui/button'
 import { useMovieStore } from '@/store/movieStore'
 import { movieService, Movie } from '@/services/MovieService'
 import { cn } from '@/lib/utils'
-import Link from 'next/link'
-import { Play, Star, Clock, ChevronRight } from 'lucide-react'
 import { PageLoader } from '@/components/ui/loader'
 import { LatestTVShows } from '@/components/LatestTVShows'
 import { Footer } from '@/components/Footer'
@@ -19,7 +16,7 @@ import { Navigation } from '@/components/Navigation'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function Home() {
-  const { currentUser, loading } = useAuth()
+  const { loading } = useAuth()
   const [activeCategory, setActiveCategory] = useState<'popular' | 'top-rated' | 'now-playing'>('popular')
   const { searchQuery } = useMovieStore()
   const [carouselMovies, setCarouselMovies] = useState<Movie[]>([])
@@ -30,8 +27,8 @@ export default function Home() {
       try {
         const response = await movieService.getTrendingMovies()
         setCarouselMovies(response.results.slice(0, 5))
-      } catch (error) {
-        console.error('Failed to fetch movies:', error)
+                } catch {
+        // Handle error silently
       }
     }
 
@@ -110,7 +107,7 @@ export default function Home() {
           {searchQuery ? (
             <div>
               <h2 className="mb-6 text-2xl font-semibold text-white">
-                Search Results for "{searchQuery}"
+                Search Results for &quot;{searchQuery}&quot;
               </h2>
               <MovieList category="search" searchQuery={searchQuery} />
             </div>

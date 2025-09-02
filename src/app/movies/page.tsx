@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { useMovieStore } from '@/store/movieStore'
 import { movieService, Movie } from '@/services/MovieService'
 import { cn } from '@/lib/utils'
-import { PageLoader } from '@/components/ui/loader'
+
 import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
 
@@ -22,9 +22,9 @@ export default function MoviesPage() {
       try {
         const response = await movieService.getTrendingMovies()
         setTrendingMovies(response.results.slice(0, 5))
-      } catch (error) {
-        console.error('Failed to fetch trending movies:', error)
-      }
+                  } catch {
+          // Handle error silently
+        }
     }
 
     fetchTrendingMovies()
@@ -43,7 +43,7 @@ export default function MoviesPage() {
 
       {!searchQuery && trendingMovies.length > 0 && (
         <section className="relative h-[60vh] bg-gradient-to-r from-gray-900 to-gray-800">
-          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div className="absolute inset-0 bg-opacity-50"></div>
           <div className="relative container mx-auto px-4 py-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -105,7 +105,7 @@ export default function MoviesPage() {
           {searchQuery ? (
             <div>
               <h2 className="mb-6 text-2xl font-semibold text-white">
-                Search Results for "{searchQuery}"
+                Search Results for &quot;{searchQuery}&quot;
               </h2>
               <MovieList category="search" searchQuery={searchQuery} />
             </div>
@@ -124,3 +124,4 @@ export default function MoviesPage() {
     </div>
   )
 }
+

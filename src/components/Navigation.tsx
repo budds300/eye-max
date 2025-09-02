@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Menu, X, User, LogOut } from 'lucide-react'
+import { Search, Menu, X, User, LogOut, ChevronDown } from 'lucide-react'
+import Image from 'next/image'
 import { SearchBar } from './SearchBar'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -10,6 +11,8 @@ export const Navigation: React.FC = () => {
   const { currentUser, logout } = useAuth()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
+  const userDropdownRef = useRef<HTMLDivElement>(null)
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -19,18 +22,32 @@ export const Navigation: React.FC = () => {
     setIsSearchOpen(!isSearchOpen)
   }
 
-  const handleAuthClick = async () => {
-    if (currentUser) {
-      try {
-        await logout()
-      } catch (error) {
-        console.error('Error logging out:', error)
-      }
-    } else {
-      // Navigate to sign in page
-      window.location.href = '/auth/signin'
+  const toggleUserDropdown = () => {
+    setIsUserDropdownOpen(!isUserDropdownOpen)
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      setIsUserDropdownOpen(false)
+    } catch {
+      // Handle error silently
     }
   }
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+        setIsUserDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <header className="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
@@ -57,7 +74,7 @@ export const Navigation: React.FC = () => {
             </nav>
           </div>
 
-          {/* Right Side - Search and Login */}
+          {/* Right Side - Search and User Menu */}
           <div className="flex items-center space-x-4">
             {/* Desktop Search */}
             <div className="hidden md:block">
@@ -72,27 +89,66 @@ export const Navigation: React.FC = () => {
               <Search className="w-5 h-5" />
             </button>
 
-            {/* Auth Button */}
-                  <button
-              onClick={handleAuthClick}
-              className="flex items-center space-x-2 text-white hover:text-teal-400 transition-colors"
-            >
-              <div className="w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
-                {currentUser?.photoURL ? (
-                  <img 
-                    src={currentUser.photoURL} 
-                    alt={currentUser.displayName || 'User'} 
-                    className="w-6 h-6 rounded-full"
-                  />
-                ) : (
+            {/* User Menu */}
+            {currentUser ? (
+              <div className="relative" ref={userDropdownRef}>
+                <button
+                  onClick={toggleUserDropdown}
+                  className="flex items-center space-x-2 text-white hover:text-teal-400 transition-colors"
+                >
+                  <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center">
+                    {currentUser?.photoURL ? (
+                      <Image 
+                        src={currentUser.photoURL} 
+                        alt={currentUser.displayName || 'User'} 
+                        width={32}
+                        height={32}
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
+                    ) : (
+                      <User className="w-4 h-4" />
+                    )}
+                  </div>
+                  <span className="hidden sm:inline text-sm">
+                    {currentUser.displayName || 'User'}
+                  </span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isUserDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* User Dropdown Menu */}
+                {isUserDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-gray-700 rounded-lg shadow-lg border border-gray-600 py-2 z-50">
+                    <div className="px-4 py-2 border-b border-gray-600">
+                      <p className="text-sm text-gray-300">
+                        Signed in as
+                      </p>
+                      <p className="text-sm font-medium text-white truncate">
+                        {currentUser.email}
+                      </p>
+                    </div>
+                    
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center space-x-2 px-4 py-2 text-left text-gray-300 hover:bg-gray-600 hover:text-white transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Login Button for non-authenticated users */
+              <Link
+                href="/auth/signin"
+                className="flex items-center space-x-2 text-white hover:text-teal-400 transition-colors"
+              >
+                <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
                   <User className="w-4 h-4" />
-              )}
-            </div>
-              <span className="hidden sm:inline">
-                {currentUser ? currentUser.displayName || 'Logout' : 'Login'}
-              </span>
-              {currentUser && <LogOut className="w-4 h-4 hidden sm:inline" />}
-            </button>
+                </div>
+                <span className="hidden sm:inline">Login</span>
+              </Link>
+            )}
 
             {/* Mobile Menu Toggle */}
             <button
@@ -115,22 +171,22 @@ export const Navigation: React.FC = () => {
         {isMobileMenuOpen && (
           <nav className="md:hidden mt-4 pt-4 border-t border-gray-700">
             <div className="flex flex-col space-y-3">
-              <Link
-                href="/"
+              <Link 
+                href="/" 
                 className="text-gray-300 hover:text-white transition-colors py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Home
               </Link>
-              <Link
-                href="/movies"
+              <Link 
+                href="/movies" 
                 className="text-gray-300 hover:text-white transition-colors py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Movies
               </Link>
-              <Link
-                href="/tv-shows"
+              <Link 
+                href="/tv-shows" 
                 className="text-gray-300 hover:text-white transition-colors py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >

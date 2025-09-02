@@ -48,14 +48,14 @@ export const TVShowCard: React.FC<TVShowCardProps> = ({ show }) => {
           </div>
 
           {/* Play Button Overlay */}
-          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+          <div className="absolute inset-0  bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
             <div className="w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <Play className="w-6 h-6 text-white ml-1" />
             </div>
           </div>
 
           {/* Rating */}
-          <div className="absolute bottom-2 left-2 flex items-center space-x-1 bg-black bg-opacity-70 px-2 py-1 rounded">
+          <div className="absolute bottom-2 left-2 flex items-center space-x-1  bg-opacity-70 px-2 py-1 rounded">
             <Star className="w-3 h-3 text-yellow-400 fill-current" />
             <span className="text-white text-xs font-medium">
               {show.vote_average.toFixed(1)}

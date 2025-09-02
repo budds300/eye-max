@@ -1,8 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Loader2, Play, List } from 'lucide-react'
+import { Play, List } from 'lucide-react'
 import { MovieGridSkeleton } from '@/components/ui/loader'
 import { Button } from '@/components/ui/button'
 import { MovieCard } from '@/components/MovieCard'
@@ -34,9 +33,9 @@ export const TrendingSection: React.FC = () => {
             setTVShows(response.results)
           }
         }
-      } catch (error) {
-        console.error('Failed to fetch trending content:', error)
-      } finally {
+                    } catch {
+            // Handle error silently
+          } finally {
         setLoading(false)
       }
     }

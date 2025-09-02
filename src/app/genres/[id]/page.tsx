@@ -32,9 +32,8 @@ export default function GenrePage() {
         }
         const data = await response.json()
         setMovies(data.results)
-      } catch (err) {
+      } catch {
         setError('Failed to load genre movies')
-        console.error('Error fetching genre movies:', err)
       } finally {
         setLoading(false)
       }

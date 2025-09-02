@@ -2,14 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const apiKey = process.env.TMDB_API_KEY
     const baseURL = process.env.TMDB_BASE_URL
     const { searchParams } = new URL(request.url)
     const page = searchParams.get('page') || '1'
-    const genreId = params.id
+    const resolvedParams = await params
+    const genreId = resolvedParams.id
 
     if (!apiKey || !baseURL) {
       return NextResponse.json(
@@ -41,6 +42,10 @@ export async function GET(
     )
   }
 }
+
+
+
+
 
 
 

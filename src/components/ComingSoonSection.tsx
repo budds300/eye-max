@@ -6,7 +6,7 @@ import { Loader2, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { MovieCard } from '@/components/MovieCard'
 import { movieService, Movie } from '@/services/MovieService'
-import { cn } from '@/lib/utils'
+
 
 export const ComingSoonSection: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([])
@@ -18,9 +18,9 @@ export const ComingSoonSection: React.FC = () => {
       try {
         const response = await movieService.getUpcomingMovies()
         setMovies(response.results)
-      } catch (error) {
-        console.error('Failed to fetch upcoming movies:', error)
-      } finally {
+                  } catch {
+          // Handle error silently
+        } finally {
         setLoading(false)
       }
     }
@@ -68,6 +68,8 @@ export const ComingSoonSection: React.FC = () => {
     </section>
   )
 }
+
+
 
 
 

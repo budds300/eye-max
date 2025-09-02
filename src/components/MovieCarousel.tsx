@@ -55,10 +55,7 @@ export const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies, className 
     setCurrentIndex((prev) => (prev + newDirection + movies.length) % movies.length)
   }
 
-  const formatDate = (dateString: string) => {
-    if (!dateString) return 'Unknown'
-    return new Date(dateString).getFullYear()
-  }
+
 
   const formatRating = (rating: number) => {
     return rating.toFixed(1)

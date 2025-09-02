@@ -3,8 +3,7 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { Star, Clock } from 'lucide-react'
+
 import { Movie } from '@/services/MovieService'
 import { cn } from '@/lib/utils'
 

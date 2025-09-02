@@ -6,13 +6,14 @@ import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
 
 interface TVShowPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default function TVShowPage({ params }: TVShowPageProps) {
-  const tvShowId = parseInt(params.id)
+  const resolvedParams = React.use(params)
+  const tvShowId = parseInt(resolvedParams.id)
 
   if (isNaN(tvShowId)) {
     return (
@@ -30,6 +31,10 @@ export default function TVShowPage({ params }: TVShowPageProps) {
     </div>
   )
 }
+
+
+
+
 
 
 

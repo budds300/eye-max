@@ -17,9 +17,9 @@ export const GenresDropdown: React.FC = () => {
         setLoading(true)
         const response = await movieService.getGenres()
         setGenres(response.genres)
-      } catch (error) {
-        console.error('Error fetching genres:', error)
-      } finally {
+                  } catch {
+          // Handle error silently
+        } finally {
         setLoading(false)
       }
     }
@@ -76,6 +76,8 @@ export const GenresDropdown: React.FC = () => {
     </div>
   )
 }
+
+
 
 
 

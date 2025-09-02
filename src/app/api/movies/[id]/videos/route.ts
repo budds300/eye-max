@@ -19,7 +19,7 @@ export async function GET(
     const baseURL = process.env.TMDB_BASE_URL || 'https://api.themoviedb.org/3'
 
     const response = await fetch(
-      `${baseURL}/movie/${movieId}/credits?api_key=${apiKey}&language=en-US`
+      `${baseURL}/movie/${movieId}/videos?api_key=${apiKey}&language=en-US`
     )
 
     if (!response.ok) {
@@ -29,20 +29,12 @@ export async function GET(
     const data = await response.json()
     return NextResponse.json(data)
   } catch (error) {
-    console.error('Error fetching movie credits:', error)
+    console.error('Error fetching movie videos:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch movie credits' },
+      { error: 'Failed to fetch movie videos' },
       { status: 500 }
     )
   }
 }
-
-
-
-
-
-
-
-
 
 

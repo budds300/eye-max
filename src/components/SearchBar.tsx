@@ -32,7 +32,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   // Debounced search function
   const debouncedSearch = useCallback(
-    debounce(async (searchTerm: string) => {
+    async (searchTerm: string) => {
       if (!searchTerm.trim()) {
         clearSearch()
         return
@@ -53,7 +53,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         setIsSearching(false)
         setSearchLoading(false)
       }
-    }, 500),
+    },
     [setSearchResults, setSearchLoading, setSearchError, setSearchQuery, clearSearch, onSearch]
   )
 
@@ -61,7 +61,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setQuery(value)
-    debouncedSearch(value)
+    debounce(debouncedSearch, 500)(value)
   }
 
   // Handle clear search
@@ -113,7 +113,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 }
 
 // Debounce utility function
-function debounce<T extends (...args: any[]) => any>(
+function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {

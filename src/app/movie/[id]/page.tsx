@@ -3,7 +3,6 @@
 import React from 'react'
 import { useParams } from 'next/navigation'
 import { MovieDetails } from '@/components/MovieDetails'
-import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
 
 export default function MoviePage() {
@@ -25,7 +24,7 @@ export default function MoviePage() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <Navigation />
+      {/* <Navigation /> */}
       <MovieDetails movieId={movieId} />
       <Footer />
     </div>

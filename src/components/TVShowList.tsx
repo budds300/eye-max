@@ -46,9 +46,8 @@ export const TVShowList: React.FC<TVShowListProps> = ({ category, searchQuery })
         
         setShows(response.results)
         setTotalPages(Math.min(response.total_pages, 500)) // TMDB limits to 500 pages
-      } catch (err) {
+      } catch {
         setError('Failed to load TV shows')
-        console.error('Error fetching TV shows:', err)
       } finally {
         setLoading(false)
       }
@@ -121,6 +120,8 @@ export const TVShowList: React.FC<TVShowListProps> = ({ category, searchQuery })
     </div>
   )
 }
+
+
 
 
 

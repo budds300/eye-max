@@ -17,9 +17,8 @@ export default function GenresPage() {
         setLoading(true)
         const response = await movieService.getGenres()
         setGenres(response.genres)
-      } catch (err) {
+      } catch {
         setError('Failed to load genres')
-        console.error('Error fetching genres:', err)
       } finally {
         setLoading(false)
       }
@@ -73,6 +72,8 @@ export default function GenresPage() {
     </div>
   )
 }
+
+
 
 
 

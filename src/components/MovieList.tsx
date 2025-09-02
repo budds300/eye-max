@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { Loader2, AlertCircle } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import { MovieGridSkeleton } from '@/components/ui/loader'
 import { MovieCard } from '@/components/MovieCard'
 import { Button } from '@/components/ui/button'
@@ -31,14 +31,12 @@ export const MovieList: React.FC<MovieListProps> = ({
   searchQuery,
   className = '',
 }) => {
-  const [page, setPage] = useState(1)
-  const [loadingMore, setLoadingMore] = useState(false)
+
   
   const {
     movies,
     searchResults,
-    currentPage,
-    totalPages,
+
     loading,
     error,
     searchLoading,
@@ -55,9 +53,9 @@ export const MovieList: React.FC<MovieListProps> = ({
   const displayMovies = isSearchMode ? searchResults : movies
   const displayLoading = isSearchMode ? searchLoading : loading
   const displayError = isSearchMode ? searchError : error
-  const displayTotalPages = isSearchMode ? totalPages : totalPages
 
-  const fetchMovies = async (pageNum: number, append = false) => {
+
+  const fetchMovies = useCallback(async (pageNum: number, append = false) => {
     try {
       let results
       
@@ -106,7 +104,7 @@ export const MovieList: React.FC<MovieListProps> = ({
         setError(errorMessage)
       }
     }
-  }
+  }, [category, searchQuery, isSearchMode, movies, setMovies, setError, setSearchError, searchResults, setSearchResults])
 
   useEffect(() => {
     setPage(1)
@@ -117,17 +115,9 @@ export const MovieList: React.FC<MovieListProps> = ({
       setLoading(true)
       fetchMovies(1)
     }
-  }, [category, searchQuery])
+  }, [category, searchQuery, isSearchMode, setSearchLoading, setLoading, fetchMovies])
 
-  const loadMore = async () => {
-    if (page >= displayTotalPages || loadingMore) return
-    
-    setLoadingMore(true)
-    const nextPage = page + 1
-    setPage(nextPage)
-    await fetchMovies(nextPage, true)
-    setLoadingMore(false)
-  }
+
 
   if (displayLoading && displayMovies.length === 0) {
     return <MovieGridSkeleton count={20} />

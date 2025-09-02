@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Loader2, Play, List } from 'lucide-react'
+import { List } from 'lucide-react'
 import { MovieGridSkeleton } from '@/components/ui/loader'
 import { Button } from '@/components/ui/button'
 import { TVShowCard } from '@/components/TVShowCard'
 import { movieService, TVShow } from '@/services/MovieService'
-import { cn } from '@/lib/utils'
+
 
 export const LatestTVShows: React.FC = () => {
   const [tvShows, setTvShows] = useState<TVShow[]>([])
@@ -27,12 +27,10 @@ export const LatestTVShows: React.FC = () => {
           .slice(0, 20)
           setTvShows(validTvShows)
         } else {
-          console.error('Invalid response structure:', response)
           setError('Invalid data received from server')
         }
-      } catch (err) {
+      } catch {
         setError('Failed to load latest TV shows')
-        console.error('Error fetching latest TV shows:', err)
       } finally {
         setLoading(false)
       }

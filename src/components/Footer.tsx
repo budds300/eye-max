@@ -16,14 +16,7 @@ export const Footer: React.FC = () => {
     { name: 'Trending', href: '/#trending' },
   ]
 
-  const categories = [
-    { name: 'Action', href: '/#action' },
-    { name: 'Drama', href: '/#drama' },
-    { name: 'Comedy', href: '/#comedy' },
-    { name: 'Horror', href: '/#horror' },
-    { name: 'Sci-Fi', href: '/#sci-fi' },
-    { name: 'Romance', href: '/#romance' },
-  ]
+
 
   const socialLinks = [
     {
@@ -49,7 +42,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-900 border-t border-gray-800">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
@@ -85,22 +78,7 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Categories */}
-          <div className="space-y-4">
-            <h3 className="text-white font-semibold text-lg">Categories</h3>
-            <ul className="space-y-2">
-              {categories.map((category) => (
-                <li key={category.name}>
-                  <Link 
-                    href={category.href}
-                    className="text-gray-400 hover:text-teal-400 transition-colors text-sm"
-                  >
-                    {category.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+
 
           {/* Social Links */}
           <div className="space-y-4">
@@ -143,7 +121,7 @@ export const Footer: React.FC = () => {
               © {currentYear} EyeMax. All rights reserved.
             </p>
             <div className="flex items-center space-x-6 text-sm">
-              <Link href="/privacy" className="text-gray-400 hover:text-teal-400 transition-colors">
+              {/* <Link href="/privacy" className="text-gray-400 hover:text-teal-400 transition-colors">
                 Privacy Policy
               </Link>
               <Link href="/terms" className="text-gray-400 hover:text-teal-400 transition-colors">
@@ -151,7 +129,7 @@ export const Footer: React.FC = () => {
               </Link>
               <Link href="/about" className="text-gray-400 hover:text-teal-400 transition-colors">
                 About
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>

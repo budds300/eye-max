@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import Link from 'next/link'
 import { Star, ThumbsUp, ThumbsDown, Play, Clock, MapPin, Calendar, Users, Tag } from 'lucide-react'
 import { movieService, Movie, MovieDetails as MovieDetailsType, CastMember } from '@/services/MovieService'
-import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Navigation } from '@/components/Navigation'
 
@@ -17,27 +16,34 @@ export const MovieDetails: React.FC<MovieDetailsProps> = ({ movieId }) => {
   const [movie, setMovie] = useState<MovieDetailsType | null>(null)
   const [recommendations, setRecommendations] = useState<Movie[]>([])
   const [cast, setCast] = useState<CastMember[]>([])
+  const [videos, setVideos] = useState<{ key: string; site: string; type: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [userRating, setUserRating] = useState<number | null>(null)
   const [userLiked, setUserLiked] = useState<boolean | null>(null)
+  const [userRating, setUserRating] = useState<number>(0)
 
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
         setLoading(true)
-        const [movieData, recommendationsData, castData] = await Promise.all([
+        const [movieData, recommendationsData, castData, videosData] = await Promise.all([
           movieService.getMovieDetails(movieId),
           movieService.getRecommendations(movieId, 1),
-          movieService.getMovieCredits(movieId)
+          movieService.getMovieCredits(movieId),
+          fetchMovieVideos(movieId)
         ])
         
         setMovie(movieData)
-        setRecommendations(recommendationsData.results.slice(0, 9)) // Show 9 recommendations
+        
+        // Filter recommendations to show movies with similar names
+        const similarMovies = filterSimilarMovies(recommendationsData.results, movieData.title)
+        
+        setRecommendations(similarMovies.slice(0, 6)) // Show 6 recommendations in 2 rows of 3
+        
         setCast(castData.cast.slice(0, 10)) // Show top 10 cast members
-      } catch (err) {
+        setVideos(videosData)
+      } catch {
         setError('Failed to load movie details')
-        console.error('Error fetching movie data:', err)
       } finally {
         setLoading(false)
       }
@@ -45,6 +51,87 @@ export const MovieDetails: React.FC<MovieDetailsProps> = ({ movieId }) => {
 
     fetchMovieData()
   }, [movieId])
+
+  // Function to fetch movie videos/trailers
+  const fetchMovieVideos = async (movieId: number) => {
+    try {
+      const response = await fetch(`/api/movies/${movieId}/videos`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch movie videos')
+      }
+      const data = await response.json()
+      
+      // Filter for official trailers from YouTube
+      const officialTrailer = data.results.filter((trailer: { type: string; site: string }) => 
+        trailer.type === "Trailer" && trailer.site === "YouTube"
+      )
+      
+      // Return the first official trailer, or null if none found
+      return officialTrailer.length > 0 ? officialTrailer[0] : null
+    } catch {
+      return null
+    }
+  }
+
+  // Function to filter movies with similar names
+  const filterSimilarMovies = (movies: Movie[], currentTitle: string) => {
+    if (!currentTitle) return movies
+    
+    const currentWords = currentTitle.toLowerCase().split(/\s+/)
+    
+    // First try to find movies with at least 2 matching words
+    let similarMovies = movies.filter(movie => {
+      const movieWords = movie.title.toLowerCase().split(/\s+/)
+      
+      const commonWords = currentWords.filter(word => 
+        movieWords.some(movieWord => 
+          movieWord.includes(word) || word.includes(movieWord)
+        )
+      )
+      
+      return commonWords.length >= 2
+    })
+    
+    // If no movies found with 2+ matches, try with 1+ match
+    if (similarMovies.length === 0) {
+      similarMovies = movies.filter(movie => {
+        const movieWords = movie.title.toLowerCase().split(/\s+/)
+        
+        const commonWords = currentWords.filter(word => 
+          movieWords.some(movieWord => 
+            movieWord.includes(word) || word.includes(movieWord)
+          )
+        )
+        
+        return commonWords.length >= 1
+      })
+    }
+    
+    // If still no movies found, return original list (fallback)
+    if (similarMovies.length === 0) {
+      return movies
+    }
+    
+    // Sort by similarity score
+    return similarMovies.sort((a, b) => {
+      const aWords = a.title.toLowerCase().split(/\s+/)
+      const bWords = b.title.toLowerCase().split(/\s+/)
+      
+      const aScore = currentWords.filter(word => 
+        aWords.some(movieWord => 
+          movieWord.includes(word) || word.includes(movieWord)
+        )
+      ).length
+      
+      const bScore = currentWords.filter(word => 
+        bWords.some(movieWord => 
+          movieWord.includes(word) || word.includes(movieWord)
+        )
+      ).length
+      
+      return bScore - aScore // Higher score first
+    })
+  }
 
   if (loading) {
     return (
@@ -95,6 +182,30 @@ export const MovieDetails: React.FC<MovieDetailsProps> = ({ movieId }) => {
         </div>
       </div>
 
+      {/* Trailer Section */}
+      <div id="trailer-section" className="container mx-auto px-4 py-8">
+        {videos ? (
+          <div className="relative w-full h-96 rounded-lg overflow-hidden bg-gray-800">
+            <iframe
+              src={`https://www.youtube.com/embed/${videos.key}`}
+              title={`${movie.title} Trailer`}
+              className="w-full h-full"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        ) : (
+          <div className="w-full h-96 rounded-lg bg-gray-800 flex items-center justify-center">
+            <div className="text-center text-gray-400">
+              <div className="text-6xl mb-4">🎬</div>
+              <h3 className="text-xl font-semibold mb-2">No Trailer Available</h3>
+              <p className="text-sm">Trailer for this movie is not available at the moment.</p>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content - Left Side */}
@@ -108,10 +219,25 @@ export const MovieDetails: React.FC<MovieDetailsProps> = ({ movieId }) => {
                   fill
                   className="rounded-lg object-cover"
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg flex items-center justify-center hover:bg-opacity-20 transition-all duration-200">
-                  <div className="w-16 h-16 bg-teal-500 rounded-full flex items-center justify-center hover:bg-teal-600 transition-colors cursor-pointer">
-                    <Play className="w-8 h-8 text-white ml-1" />
-                  </div>
+                <div className="absolute inset-0  bg-opacity-5 rounded-lg flex items-center justify-center hover:bg-opacity-10 transition-all duration-200">
+                  {videos ? (
+                    <div 
+                      className="w-16 h-16 bg-teal-500 rounded-full flex items-center justify-center hover:bg-teal-600 transition-colors cursor-pointer"
+                      onClick={() => {
+                        // Scroll to trailer section
+                        const trailerSection = document.getElementById('trailer-section')
+                        if (trailerSection) {
+                          trailerSection.scrollIntoView({ behavior: 'smooth' })
+                        }
+                      }}
+                    >
+                      <Play className="w-8 h-8 text-white ml-1" />
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 bg-gray-500 rounded-full flex items-center justify-center">
+                      <Play className="w-8 h-8 text-white ml-1" />
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -140,6 +266,21 @@ export const MovieDetails: React.FC<MovieDetailsProps> = ({ movieId }) => {
                       >
                         <ThumbsDown className="w-4 h-4" />
                       </button>
+                    </div>
+                    {/* Rating Stars */}
+                    <div className="flex items-center space-x-1 mt-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          onClick={() => setUserRating(star)}
+                          className={cn(
+                            "text-lg transition-colors",
+                            star <= userRating ? "text-yellow-400" : "text-gray-400 hover:text-yellow-300"
+                          )}
+                        >
+                          ★
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -230,22 +371,7 @@ export const MovieDetails: React.FC<MovieDetailsProps> = ({ movieId }) => {
                   </div>
                 </div>
 
-                {/* Comment Section */}
-                <div className="mt-8">
-                  <h3 className="text-lg font-semibold mb-4">Comment</h3>
-                  <div className="bg-gray-800 rounded-lg p-4">
-                    <textarea
-                      placeholder="Write your comment here..."
-                      className="w-full bg-gray-700 text-white p-3 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
-                      rows={4}
-                    />
-                    <div className="flex justify-end mt-3">
-                      <Button className="bg-teal-500 hover:bg-teal-600">
-                        Post Comment
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+            
               </div>
             </div>
           </div>
@@ -253,37 +379,65 @@ export const MovieDetails: React.FC<MovieDetailsProps> = ({ movieId }) => {
           {/* Right Sidebar - You May Also Like */}
           <div className="lg:col-span-1">
             <h3 className="text-xl font-bold mb-4">You May Also Like</h3>
-            <div className="grid grid-cols-1 gap-4">
-              {recommendations.map((rec) => (
-                <div
-                  key={rec.id}
-                  className="bg-gray-800 rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform"
-                >
-                  <div className="relative">
-                    <Image
-                      src={movieService.getImageURL(rec.poster_path, 'w200')}
-                      alt={rec.title}
-                      width={200}
-                      height={300}
-                      className="w-full h-48 object-cover"
-                    />
-                    <span className={cn(
-                      "absolute top-2 right-2 px-2 py-1 rounded text-xs font-bold",
-                      getQualityBadgeColor(rec.vote_average)
-                    )}>
-                      {getQualityBadge(rec.vote_average)}
-                    </span>
-                  </div>
-                                      <div className="p-3">
-                      <h4 className="font-semibold text-sm mb-1 line-clamp-2">{rec.title}</h4>
+            
+            {/* Debug Info */}
+            <div className="text-xs text-gray-400 mb-2">
+              Found {recommendations.length} recommendations
+            </div>
+            
+            {recommendations.length > 0 ? (
+              <div className="grid grid-cols-3 gap-3">
+                {recommendations.map((rec) => (
+                  <div
+                    key={rec.id}
+                    className="bg-gray-800 rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+                  >
+                    <div className="relative">
+                      <Image
+                        src={movieService.getImageURL(rec.poster_path, 'w200')}
+                        alt={rec.title}
+                        width={200}
+                        height={300}
+                        className="w-full h-32 object-cover"
+                      />
+                      <span className={cn(
+                        "absolute top-2 right-2 px-2 py-1 rounded text-xs font-bold",
+                        getQualityBadgeColor(rec.vote_average)
+                      )}>
+                        {getQualityBadge(rec.vote_average)}
+                      </span>
+                    </div>
+                    <div className="p-2">
+                      <h4 className="font-semibold text-xs mb-1 line-clamp-2">{rec.title}</h4>
                       <div className="flex items-center justify-between text-xs text-gray-400">
-                        <span>{new Date(rec.release_date).getFullYear()} • Movie</span>
-                        <span className="px-2 py-1 bg-gray-700 rounded text-xs">Movie</span>
+                        <span className="text-xs">{new Date(rec.release_date).getFullYear()}</span>
+                        <span className="px-1 py-0.5 bg-gray-700 rounded text-xs">Movie</span>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
+            ) : (
+              <div className="text-center text-gray-400 py-8">
+                <div className="text-4xl mb-2">🎬</div>
+                <p className="text-sm">No similar movies found</p>
+                <p className="text-xs mt-1">Try viewing upcoming movies or now showing movies</p>
+                <div className="mt-4 space-y-2">
+                  <Link 
+                    href="/upcoming" 
+                    className="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
+                  >
+                    View Upcoming Movies
+                  </Link>
+                  <Link 
+                    href="/movies" 
+                    className="inline-block px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors ml-2"
+                  >
+                    View Now Showing
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

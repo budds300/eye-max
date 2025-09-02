@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { MovieList } from '@/components/MovieList'
-import { PageLoader } from '@/components/ui/loader'
+
 
 export default function ActionMoviesPage() {
   return (
@@ -18,6 +18,8 @@ export default function ActionMoviesPage() {
     </div>
   )
 }
+
+
 
 
 

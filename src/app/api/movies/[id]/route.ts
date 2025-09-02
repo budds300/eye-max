@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const movieId = params.id
+    const resolvedParams = await params
+    const movieId = resolvedParams.id
 
     if (!movieId || isNaN(parseInt(movieId))) {
       return NextResponse.json(
@@ -35,6 +36,10 @@ export async function GET(
     )
   }
 }
+
+
+
+
 
 
 

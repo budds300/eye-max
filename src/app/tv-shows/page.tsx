@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { useMovieStore } from '@/store/movieStore'
 import { movieService, TVShow } from '@/services/MovieService'
 import { cn } from '@/lib/utils'
-import { PageLoader } from '@/components/ui/loader'
+
 import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
 
@@ -22,9 +22,9 @@ export default function TVShowsPage() {
       try {
         const response = await movieService.getTrendingTVShows()
         setTrendingShows(response.results.slice(0, 5))
-      } catch (error) {
-        console.error('Failed to fetch trending TV shows:', error)
-      }
+                  } catch {
+          // Handle error silently
+        }
     }
 
     fetchTrendingShows()
@@ -104,7 +104,7 @@ export default function TVShowsPage() {
           {searchQuery ? (
             <div>
               <h2 className="mb-6 text-2xl font-semibold text-white">
-                Search Results for "{searchQuery}"
+                Search Results for &quot;{searchQuery}&quot;
               </h2>
               <TVShowList category="search" searchQuery={searchQuery} />
             </div>

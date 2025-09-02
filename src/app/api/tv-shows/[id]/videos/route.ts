@@ -6,11 +6,11 @@ export async function GET(
 ) {
   try {
     const resolvedParams = await params
-    const movieId = resolvedParams.id
+    const tvShowId = resolvedParams.id
 
-    if (!movieId || isNaN(parseInt(movieId))) {
+    if (!tvShowId || isNaN(parseInt(tvShowId))) {
       return NextResponse.json(
-        { error: 'Valid movie ID is required' },
+        { error: 'Valid TV show ID is required' },
         { status: 400 }
       )
     }
@@ -19,7 +19,7 @@ export async function GET(
     const baseURL = process.env.TMDB_BASE_URL || 'https://api.themoviedb.org/3'
 
     const response = await fetch(
-      `${baseURL}/movie/${movieId}/credits?api_key=${apiKey}&language=en-US`
+      `${baseURL}/tv/${tvShowId}/videos?api_key=${apiKey}&language=en-US`
     )
 
     if (!response.ok) {
@@ -29,20 +29,12 @@ export async function GET(
     const data = await response.json()
     return NextResponse.json(data)
   } catch (error) {
-    console.error('Error fetching movie credits:', error)
+    console.error('Error fetching TV show videos:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch movie credits' },
+      { error: 'Failed to fetch TV show videos' },
       { status: 500 }
     )
   }
 }
-
-
-
-
-
-
-
-
 
 

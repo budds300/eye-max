@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { Star, Play, Clock, Calendar, Eye } from 'lucide-react'
-import { PageLoader, MovieGridSkeleton } from '@/components/ui/loader'
+import {  Play } from 'lucide-react'
+import { PageLoader } from '@/components/ui/loader'
 import { movieService, Movie } from '@/services/MovieService'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -25,9 +24,8 @@ export default function UpcomingMoviesPage() {
         const response = await movieService.getUpcomingMovies(currentPage)
         setMovies(response.results)
         setTotalPages(response.total_pages)
-      } catch (err) {
+      } catch {
         setError('Failed to load upcoming movies')
-        console.error('Error fetching upcoming movies:', err)
       } finally {
         setLoading(false)
       }
@@ -36,19 +34,7 @@ export default function UpcomingMoviesPage() {
     fetchUpcomingMovies()
   }, [currentPage])
 
-  const formatDuration = (minutes: number) => {
-    const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
-    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
-  }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    })
-  }
 
   const getQualityBadge = (voteAverage: number) => {
     return voteAverage >= 7.0 ? 'HD' : 'CAM'
@@ -98,7 +84,7 @@ export default function UpcomingMoviesPage() {
 
         {/* Movies Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4">
-          {movies.map((movie, index) => (
+          {movies.map((movie) => (
                          <div
                key={movie.id}
                className="group cursor-pointer hover:scale-105 transition-transform duration-300"
@@ -123,7 +109,7 @@ export default function UpcomingMoviesPage() {
                     </div>
 
                     {/* Play Button Overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+                    <div className="absolute inset-0  bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
                       <div className="w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <Play className="w-6 h-6 text-white ml-1" />
                       </div>

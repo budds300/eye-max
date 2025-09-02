@@ -109,7 +109,7 @@ class MovieService {
   private baseURL: string
   private apiKey: string
   private imageBaseURL: string
-  private cache: Map<string, { data: any; timestamp: number }> = new Map()
+  private cache: Map<string, { data: unknown; timestamp: number }> = new Map()
   private cacheTimeout = 5 * 60 * 1000 // 5 minutes
   private initialized = false
 
@@ -129,7 +129,7 @@ class MovieService {
     }
   }
 
-  private getCacheKey(endpoint: string, params: Record<string, any> = {}): string {
+  private getCacheKey(endpoint: string, params: Record<string, unknown> = {}): string {
     const sortedParams = Object.keys(params)
       .sort()
       .map(key => `${key}=${params[key]}`)
@@ -141,7 +141,7 @@ class MovieService {
     return Date.now() - timestamp < this.cacheTimeout
   }
 
-  private async makeRequest<T>(endpoint: string, params: Record<string, any> = {}): Promise<T> {
+  private async makeRequest<T>(endpoint: string, params: Record<string, unknown> = {}): Promise<T> {
     this.initialize()
     
     const cacheKey = this.getCacheKey(endpoint, params)
@@ -168,8 +168,7 @@ class MovieService {
       })
 
       return response.data
-    } catch (error) {
-      console.error('API request failed:', error)
+    } catch {
       throw new Error('Failed to fetch data from TMDB API')
     }
   }
@@ -182,7 +181,6 @@ class MovieService {
       }
       return await response.json()
     } catch (error) {
-      console.error('Error fetching popular movies:', error)
       throw error
     }
   }
@@ -195,7 +193,6 @@ class MovieService {
       }
       return await response.json()
     } catch (error) {
-      console.error('Error fetching top rated movies:', error)
       throw error
     }
   }
@@ -208,7 +205,6 @@ class MovieService {
       }
       return await response.json()
     } catch (error) {
-      console.error('Error fetching now playing movies:', error)
       throw error
     }
   }
@@ -221,7 +217,6 @@ class MovieService {
       }
       return await response.json()
     } catch (error) {
-      console.error('Error searching movies:', error)
       throw error
     }
   }
@@ -234,7 +229,6 @@ class MovieService {
       }
       return await response.json()
     } catch (error) {
-      console.error('Error fetching movie details:', error)
       throw error
     }
   }
@@ -247,7 +241,6 @@ class MovieService {
       }
       return await response.json()
     } catch (error) {
-      console.error('Error fetching movie credits:', error)
       throw error
     }
   }
@@ -260,7 +253,6 @@ class MovieService {
       }
       return await response.json()
     } catch (error) {
-      console.error('Error fetching movie recommendations:', error)
       throw error
     }
   }
@@ -273,7 +265,6 @@ class MovieService {
       }
       return await response.json()
     } catch (error) {
-      console.error('Error fetching upcoming movies:', error)
       throw error
     }
   }
@@ -286,7 +277,6 @@ class MovieService {
       }
       return await response.json()
     } catch (error) {
-      console.error('Error fetching trending movies:', error)
       throw error
     }
   }
@@ -299,12 +289,11 @@ class MovieService {
       }
       return await response.json()
     } catch (error) {
-      console.error('Error fetching trending TV shows:', error)
       throw error
     }
   }
 
-  async getTrendingAll(page: number = 1): Promise<any> {
+  async getTrendingAll(page: number = 1): Promise<SearchResponse | TVSearchResponse> {
     try {
       const response = await fetch(`/api/movies/trending-all?page=${page}`)
       if (!response.ok) {
@@ -312,7 +301,90 @@ class MovieService {
       }
       return await response.json()
     } catch (error) {
-      console.error('Error fetching trending all content:', error)
+      throw error
+    }
+  }
+
+  async getTVShowDetails(tvShowId: number): Promise<TVShowDetails> {
+    try {
+      const response = await fetch(`/api/tv-shows/${tvShowId}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch TV show details')
+      }
+      return await response.json()
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async getTVShowCredits(tvShowId: number): Promise<MovieCredits> {
+    try {
+      const response = await fetch(`/api/tv-shows/${tvShowId}/credits`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch TV show credits')
+      }
+      return await response.json()
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async getTVShowRecommendations(tvShowId: number, page: number = 1): Promise<TVSearchResponse> {
+    try {
+      const response = await fetch(`/api/tv-shows/${tvShowId}/recommendations?page=${page}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch TV show recommendations')
+      }
+      return await response.json()
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async getPopularTVShows(page: number = 1): Promise<TVSearchResponse> {
+    try {
+      const response = await fetch(`/api/tv-shows/popular?page=${page}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch popular TV shows')
+      }
+      return await response.json()
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async getTopRatedTVShows(page: number = 1): Promise<TVSearchResponse> {
+    try {
+      const response = await fetch(`/api/tv-shows/top-rated?page=${page}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch top rated TV shows')
+      }
+      return await response.json()
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async getOnAirTVShows(page: number = 1): Promise<TVSearchResponse> {
+    try {
+      const response = await fetch(`/api/tv-shows/on-air?page=${page}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch on air TV shows')
+      }
+      return await response.json()
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async searchTVShows(query: string, page: number = 1): Promise<TVSearchResponse> {
+    try {
+      const response = await fetch(`/api/tv-shows/search?query=${encodeURIComponent(query)}&page=${page}`)
+      if (!response.ok) {
+        throw new Error('Failed to search TV shows')
+      }
+      return await response.json()
+    } catch (error) {
       throw error
     }
   }
@@ -325,20 +397,6 @@ class MovieService {
       }
       return await response.json()
     } catch (error) {
-      console.error('Error fetching genres:', error)
-      throw error
-    }
-  }
-
-  async getUpcomingMovies(page: number = 1): Promise<SearchResponse> {
-    try {
-      const response = await fetch(`/api/movies/upcoming?page=${page}`)
-      if (!response.ok) {
-        throw new Error('Failed to fetch upcoming movies')
-      }
-      return await response.json()
-    } catch (error) {
-      console.error('Error fetching upcoming movies:', error)
       throw error
     }
   }
