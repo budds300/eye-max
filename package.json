@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "test": "node test-build.js"
+    "test": "node test-build.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",

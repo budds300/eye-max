@@ -49,6 +49,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     firstName: string,
     lastName: string,
   ) {
+    if (!auth) {
+      return Promise.reject(new Error("Firebase not initialized"));
+    }
     return createUserWithEmailAndPassword(auth, email, password).then(
       async (userCredential) => {
         // Update the user's display name with first and last name
@@ -63,6 +66,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   function signIn(email: string, password: string) {
+    if (!auth) {
+      return Promise.reject(new Error("Firebase not initialized"));
+    }
     return signInWithEmailAndPassword(auth, email, password);
   }
 
@@ -74,11 +80,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return Promise.resolve();
     }
     // For real Firebase users, use Firebase signOut
+    if (!auth) {
+      return Promise.reject(new Error("Firebase not initialized"));
+    }
     return signOut(auth);
   }
 
   function signInWithGoogle() {
     // Use the configured Google provider from firebase.ts
+    if (!auth || !googleProvider) {
+      return Promise.reject(new Error("Firebase not initialized"));
+    }
     return signInWithRedirect(auth, googleProvider);
   }
 
@@ -122,6 +134,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);
