@@ -60,13 +60,13 @@ TMDB_BASE_URL=https://api.themoviedb.org/3
 TMDB_IMAGE_BASE_URL=https://image.tmdb.org/t/p
 
 # Firebase Configuration
-NEXT_PUBLIC_FIREBASE_API_KEY=your-firebase-api-key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
-NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
-NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
+NEXT_FIREBASE_API_KEY=your-firebase-api-key
+NEXT_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+NEXT_FIREBASE_PROJECT_ID=your-project-id
+NEXT_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+NEXT_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+NEXT_FIREBASE_APP_ID=your-app-id
+NEXT_FIREBASE_MEASUREMENT_ID=your-measurement-id
 ```
 
 4. Set up Firebase Authentication:
