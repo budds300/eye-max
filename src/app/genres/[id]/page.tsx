@@ -82,11 +82,12 @@ export default function GenrePage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
           >
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {movies.slice(0, 20).map((movie) => (
               <MovieCard key={movie.id} movie={movie} />
             ))}
+            </div>
           </motion.div>
         )}
       </div>

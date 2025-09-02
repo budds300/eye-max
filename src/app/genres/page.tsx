@@ -60,11 +60,12 @@ export default function GenresPage() {
             <Link key={genre.id} href={`/genres/${genre.id}`}>
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="bg-gray-800 rounded-lg p-6 text-center cursor-pointer hover:bg-gray-700 transition-colors"
               >
-                <h2 className="text-lg font-semibold text-teal-400">{genre.name}</h2>
-                <p className="text-sm text-gray-400 mt-2">Explore {genre.name} movies</p>
-              </motion.div>
+                <div className="bg-gray-800 rounded-lg p-6 text-center cursor-pointer hover:bg-gray-700 transition-colors">
+                                  <h2 className="text-lg font-semibold text-teal-400">{genre.name}</h2>
+                  <p className="text-sm text-gray-400 mt-2">Explore {genre.name} movies</p>
+                </div>
+                </motion.div>
             </Link>
           ))}
         </div>

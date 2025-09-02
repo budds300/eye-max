@@ -49,14 +49,15 @@ export default function MoviesPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-center"
             >
-              <h1 className="text-5xl font-bold mb-4">Movies</h1>
-              <p className="text-xl text-gray-300 mb-8">
-                Discover the latest and greatest films
-              </p>
-              <div className="flex justify-center">
-                <SearchBar className="w-full max-w-md" />
+              <div className="text-center">
+                <h1 className="text-5xl font-bold mb-4">Movies</h1>
+                <p className="text-xl text-gray-300 mb-8">
+                  Discover the latest and greatest films
+                </p>
+                <div className="flex justify-center">
+                  <SearchBar className="w-full max-w-md" />
+                </div>
               </div>
             </motion.div>
           </div>

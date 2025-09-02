@@ -54,7 +54,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
               {movie.title}
             </h3>
             <div className="flex items-center justify-between text-xs text-gray-400">
-              <span>{new Date(movie.release_date).getFullYear()} • {formatDuration(movie.runtime || 120)}</span>
+              <span>{new Date(movie.release_date).getFullYear()}</span>
               <span className="px-2 py-1 bg-gray-700 rounded text-xs text-white">Movie</span>
             </div>
           </div>

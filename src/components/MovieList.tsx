@@ -11,7 +11,7 @@ import { movieService } from '@/services/MovieService'
 import { cn } from '@/lib/utils'
 
 interface MovieListProps {
-  category?: 'popular' | 'top-rated' | 'now-playing' | 'upcoming' | 'search'
+  category?: 'popular' | 'top-rated' | 'now-playing' | 'upcoming' | 'search' | 'action' | 'comedy' | 'drama' | 'horror' | 'romance' | 'sci-fi'
   searchQuery?: string
   className?: string
 }
@@ -83,6 +83,24 @@ export const MovieList: React.FC<MovieListProps> = ({
           case 'upcoming':
             results = await movieService.getUpcomingMovies(pageNum)
             break
+          case 'action':
+            results = await fetch(`/api/movies/genre/28?page=${pageNum}`).then(res => res.json())
+            break
+          case 'comedy':
+            results = await fetch(`/api/movies/genre/35?page=${pageNum}`).then(res => res.json())
+            break
+          case 'drama':
+            results = await fetch(`/api/movies/genre/18?page=${pageNum}`).then(res => res.json())
+            break
+          case 'horror':
+            results = await fetch(`/api/movies/genre/27?page=${pageNum}`).then(res => res.json())
+            break
+          case 'romance':
+            results = await fetch(`/api/movies/genre/10749?page=${pageNum}`).then(res => res.json())
+            break
+          case 'sci-fi':
+            results = await fetch(`/api/movies/genre/878?page=${pageNum}`).then(res => res.json())
+            break
           default:
             results = await movieService.getPopularMovies(pageNum)
         }
@@ -107,7 +125,6 @@ export const MovieList: React.FC<MovieListProps> = ({
   }, [category, searchQuery, isSearchMode, movies, setMovies, setError, setSearchError, searchResults, setSearchResults])
 
   useEffect(() => {
-    setPage(1)
     if (isSearchMode && searchQuery) {
       setSearchLoading(true)
       fetchMovies(1)
@@ -160,11 +177,13 @@ export const MovieList: React.FC<MovieListProps> = ({
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-                 className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
       >
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                  {displayMovies.slice(10, 30).map((movie) => (
            <MovieCard key={movie.id} movie={movie} />
          ))}
+
+        </div>
       </motion.div>
 
       
