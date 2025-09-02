@@ -150,10 +150,7 @@ class MovieService {
     }
   }
 
-  private getCacheKey(
-    endpoint: string,
-    params: APIParams = {},
-  ): string {
+  private getCacheKey(endpoint: string, params: APIParams = {}): string {
     const sortedParams = Object.keys(params)
       .sort()
       .map((key) => `${key}=${params[key]}`)

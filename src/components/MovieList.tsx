@@ -27,8 +27,6 @@ interface MovieListProps {
   className?: string;
 }
 
-
-
 export const MovieList: React.FC<MovieListProps> = ({
   category = "popular",
   searchQuery,
@@ -205,11 +203,11 @@ export const MovieList: React.FC<MovieListProps> = ({
 
   return (
     <div className={cn("space-y-6", className)}>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {displayMovies.slice(10, 30).map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))}
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {displayMovies.slice(10, 30).map((movie) => (
+          <MovieCard key={movie.id} movie={movie} />
+        ))}
+      </div>
     </div>
   );
 };

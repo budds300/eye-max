@@ -27,9 +27,7 @@ export const TVShowCard: React.FC<TVShowCardProps> = ({ show }) => {
   };
 
   return (
-    <div
-      className="group relative bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
-    >
+    <div className="group relative bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
       <Link href={`/tv-show/${show.id}`}>
         <div className="relative aspect-[2/3] overflow-hidden">
           <Image
