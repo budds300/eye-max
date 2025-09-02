@@ -1,68 +1,71 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { TVShowCard } from './TVShowCard'
-import { Pagination } from './Pagination'
-import { movieService, TVShow } from '@/services/MovieService'
-import { PageLoader } from './ui/loader'
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { TVShowCard } from "./TVShowCard";
+import { Pagination } from "./Pagination";
+import { movieService, TVShow } from "@/services/MovieService";
+import { PageLoader } from "./ui/loader";
 
 interface TVShowListProps {
-  category: 'popular' | 'top-rated' | 'on-air' | 'search'
-  searchQuery?: string
+  category: "popular" | "top-rated" | "on-air" | "search";
+  searchQuery?: string;
 }
 
-export const TVShowList: React.FC<TVShowListProps> = ({ category, searchQuery }) => {
-  const [shows, setShows] = useState<TVShow[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+export const TVShowList: React.FC<TVShowListProps> = ({
+  category,
+  searchQuery,
+}) => {
+  const [shows, setShows] = useState<TVShow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const fetchShows = async () => {
       try {
-        setLoading(true)
-        setError(null)
-        
-        let response
-        if (category === 'search' && searchQuery) {
-          response = await movieService.searchTVShows(searchQuery, currentPage)
+        setLoading(true);
+        setError(null);
+
+        let response;
+        if (category === "search" && searchQuery) {
+          response = await movieService.searchTVShows(searchQuery, currentPage);
         } else {
           switch (category) {
-            case 'popular':
-              response = await movieService.getPopularTVShows(currentPage)
-              break
-            case 'top-rated':
-              response = await movieService.getTopRatedTVShows(currentPage)
-              break
-            case 'on-air':
-              response = await movieService.getOnAirTVShows(currentPage)
-              break
+            case "popular":
+              response = await movieService.getPopularTVShows(currentPage);
+              break;
+            case "top-rated":
+              response = await movieService.getTopRatedTVShows(currentPage);
+              break;
+            case "on-air":
+              response = await movieService.getOnAirTVShows(currentPage);
+              break;
             default:
-              response = await movieService.getPopularTVShows(currentPage)
+              response = await movieService.getPopularTVShows(currentPage);
           }
         }
-        
-        setShows(response.results)
-        setTotalPages(Math.min(response.total_pages, 500)) // TMDB limits to 500 pages
-      } catch {
-        setError('Failed to load TV shows')
-      } finally {
-        setLoading(false)
-      }
-    }
 
-    fetchShows()
-  }, [category, searchQuery, currentPage])
+        setShows(response.results);
+        setTotalPages(Math.min(response.total_pages, 500)); // TMDB limits to 500 pages
+      } catch {
+        setError("Failed to load TV shows");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchShows();
+  }, [category, searchQuery, currentPage]);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   if (loading) {
-    return <PageLoader message="Loading TV shows..." />
+    return <PageLoader message="Loading TV shows..." />;
   }
 
   if (error) {
@@ -76,7 +79,7 @@ export const TVShowList: React.FC<TVShowListProps> = ({ category, searchQuery })
           Try Again
         </button>
       </div>
-    )
+    );
   }
 
   if (shows.length === 0) {
@@ -85,7 +88,7 @@ export const TVShowList: React.FC<TVShowListProps> = ({ category, searchQuery })
         <div className="text-gray-400 text-xl mb-4">No TV shows found</div>
         <p className="text-gray-500">Try adjusting your search criteria</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -118,11 +121,5 @@ export const TVShowList: React.FC<TVShowListProps> = ({ category, searchQuery })
         </div>
       )}
     </div>
-  )
-}
-
-
-
-
-
-
+  );
+};

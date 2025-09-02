@@ -1,4 +1,3 @@
-
 # EyeMax - Movie Recommendation Application
 
 A modern, responsive movie recommendation application built with Next.js, TypeScript, and TailwindCSS. Discover and explore movies with personalized recommendations powered by the TMDB API.
@@ -32,25 +31,27 @@ A modern, responsive movie recommendation application built with Next.js, TypeSc
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - GitHub account (for OAuth)
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd eye-max
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Set up environment variables:
-Create a `.env.local` file in the root directory with the following variables:
+   Create a `.env.local` file in the root directory with the following variables:
 
 ```env
 # TMDB API Configuration
@@ -77,6 +78,7 @@ NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
    - Copy the configuration values to your `.env.local` file
 
 5. Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -122,6 +124,7 @@ src/
 ## API Integration
 
 The application integrates with the TMDB API to fetch:
+
 - Popular, top-rated, and now-playing movies
 - Movie details with cast and crew information
 - Movie recommendations
@@ -137,6 +140,7 @@ The application includes comprehensive tests for core components:
 - **MovieDetails**: Tests movie information display and user interactions
 
 Run tests with:
+
 ```bash
 npm run test
 ```
@@ -153,11 +157,13 @@ npm run test
 ### Manual Deployment
 
 1. Build the application:
+
 ```bash
 npm run build
 ```
 
 2. Start the production server:
+
 ```bash
 npm run start
 ```
@@ -165,6 +171,7 @@ npm run start
 ## CI/CD
 
 The project includes GitHub Actions workflow that:
+
 - Runs linting and tests on push
 - Deploys to Vercel when tests pass
 - Supports multiple Node.js versions

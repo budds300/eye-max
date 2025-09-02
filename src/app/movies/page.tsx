@@ -1,41 +1,43 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { SearchBar } from '@/components/SearchBar'
-import { MovieList } from '@/components/MovieList'
-import { Button } from '@/components/ui/button'
-import { useMovieStore } from '@/store/movieStore'
-import { movieService, Movie } from '@/services/MovieService'
-import { cn } from '@/lib/utils'
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { SearchBar } from "@/components/SearchBar";
+import { MovieList } from "@/components/MovieList";
+import { Button } from "@/components/ui/button";
+import { useMovieStore } from "@/store/movieStore";
+import { movieService, Movie } from "@/services/MovieService";
+import { cn } from "@/lib/utils";
 
-import { Navigation } from '@/components/Navigation'
-import { Footer } from '@/components/Footer'
+import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 
 export default function MoviesPage() {
-  const { searchQuery } = useMovieStore()
-  const [activeCategory, setActiveCategory] = useState<'popular' | 'top-rated' | 'now-playing' | 'upcoming'>('popular')
-  const [trendingMovies, setTrendingMovies] = useState<Movie[]>([])
+  const { searchQuery } = useMovieStore();
+  const [activeCategory, setActiveCategory] = useState<
+    "popular" | "top-rated" | "now-playing" | "upcoming"
+  >("popular");
+  const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
     const fetchTrendingMovies = async () => {
       try {
-        const response = await movieService.getTrendingMovies()
-        setTrendingMovies(response.results.slice(0, 5))
-                  } catch {
-          // Handle error silently
-        }
-    }
+        const response = await movieService.getTrendingMovies();
+        setTrendingMovies(response.results.slice(0, 5));
+      } catch {
+        // Handle error silently
+      }
+    };
 
-    fetchTrendingMovies()
-  }, [])
+    fetchTrendingMovies();
+  }, []);
 
   const categories = [
-    { id: 'popular', label: 'Popular' },
-    { id: 'top-rated', label: 'Top Rated' },
-    { id: 'now-playing', label: 'Now Playing' },
-    { id: 'upcoming', label: 'Upcoming' },
-  ] as const
+    { id: "popular", label: "Popular" },
+    { id: "top-rated", label: "Top Rated" },
+    { id: "now-playing", label: "Now Playing" },
+    { id: "upcoming", label: "Upcoming" },
+  ] as const;
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -85,14 +87,16 @@ export default function MoviesPage() {
               {categories.map((category) => (
                 <Button
                   key={category.id}
-                  variant={activeCategory === category.id ? 'default' : 'outline'}
+                  variant={
+                    activeCategory === category.id ? "default" : "outline"
+                  }
                   size="sm"
                   onClick={() => setActiveCategory(category.id)}
                   className={cn(
                     "transition-all duration-200",
-                    activeCategory === category.id 
-                      ? "bg-teal-500 hover:bg-teal-600" 
-                      : "bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                    activeCategory === category.id
+                      ? "bg-teal-500 hover:bg-teal-600"
+                      : "bg-gray-700 border-gray-600 text-white hover:bg-gray-600",
                   )}
                 >
                   {category.label}
@@ -113,7 +117,7 @@ export default function MoviesPage() {
           ) : (
             <div>
               <h2 className="mb-6 text-2xl font-semibold text-white">
-                {categories.find(c => c.id === activeCategory)?.label} Movies
+                {categories.find((c) => c.id === activeCategory)?.label} Movies
               </h2>
               <MovieList category={activeCategory} />
             </div>
@@ -123,6 +127,5 @@ export default function MoviesPage() {
 
       <Footer />
     </div>
-  )
+  );
 }
-

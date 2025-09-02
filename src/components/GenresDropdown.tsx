@@ -1,44 +1,47 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
-import { ChevronDown, Film } from 'lucide-react'
-import { movieService, Genre } from '@/services/MovieService'
+import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { ChevronDown, Film } from "lucide-react";
+import { movieService, Genre } from "@/services/MovieService";
 
 export const GenresDropdown: React.FC = () => {
-  const [genres, setGenres] = useState<Genre[]>([])
-  const [isOpen, setIsOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const [genres, setGenres] = useState<Genre[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        setLoading(true)
-        const response = await movieService.getGenres()
-        setGenres(response.genres)
-                  } catch {
-          // Handle error silently
-        } finally {
-        setLoading(false)
+        setLoading(true);
+        const response = await movieService.getGenres();
+        setGenres(response.genres);
+      } catch {
+        // Handle error silently
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
-    fetchGenres()
-  }, [])
+    fetchGenres();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
       }
-    }
+    };
 
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -48,7 +51,9 @@ export const GenresDropdown: React.FC = () => {
       >
         <Film className="w-4 h-4" />
         <span>Genres</span>
-        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown
+          className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+        />
       </button>
 
       {isOpen && (
@@ -74,13 +79,5 @@ export const GenresDropdown: React.FC = () => {
         </div>
       )}
     </div>
-  )
-}
-
-
-
-
-
-
-
-
+  );
+};

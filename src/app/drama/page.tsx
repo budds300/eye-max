@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import React from 'react'
-import { MovieList } from '@/components/MovieList'
+import React from "react";
+import { MovieList } from "@/components/MovieList";
 
 export default function DramaMoviesPage() {
   return (
@@ -11,19 +11,9 @@ export default function DramaMoviesPage() {
           <h1 className="text-3xl font-bold text-white mb-2">Drama Movies</h1>
           <p className="text-gray-400">Discover compelling dramatic stories</p>
         </div>
-        
+
         <MovieList category="drama" />
       </div>
     </div>
-  )
+  );
 }
-
-
-
-
-
-
-
-
-
-

@@ -1,54 +1,53 @@
-
-import { create } from 'zustand'
-import { Movie, MovieDetails, SearchResponse } from '@/services/MovieService'
+import { create } from "zustand";
+import { Movie, MovieDetails, SearchResponse } from "@/services/MovieService";
 
 interface MovieState {
   // Movie list state
-  movies: Movie[]
-  currentPage: number
-  totalPages: number
-  totalResults: number
-  loading: boolean
-  error: string | null
+  movies: Movie[];
+  currentPage: number;
+  totalPages: number;
+  totalResults: number;
+  loading: boolean;
+  error: string | null;
 
   // Search state
-  searchQuery: string
-  searchResults: Movie[]
-  searchLoading: boolean
-  searchError: string | null
+  searchQuery: string;
+  searchResults: Movie[];
+  searchLoading: boolean;
+  searchError: string | null;
 
   // Selected movie state
-  selectedMovie: MovieDetails | null
-  selectedMovieLoading: boolean
-  selectedMovieError: string | null
+  selectedMovie: MovieDetails | null;
+  selectedMovieLoading: boolean;
+  selectedMovieError: string | null;
 
   // Recommendations state
-  recommendations: Movie[]
-  recommendationsLoading: boolean
-  recommendationsError: string | null
+  recommendations: Movie[];
+  recommendationsLoading: boolean;
+  recommendationsError: string | null;
 
   // Actions
-  setMovies: (data: SearchResponse) => void
-  setLoading: (loading: boolean) => void
-  setError: (error: string | null) => void
-  
-  setSearchQuery: (query: string) => void
-  setSearchResults: (data: SearchResponse) => void
-  setSearchLoading: (loading: boolean) => void
-  setSearchError: (error: string | null) => void
-  
-  setSelectedMovie: (movie: MovieDetails | null) => void
-  setSelectedMovieLoading: (loading: boolean) => void
-  setSelectedMovieError: (error: string | null) => void
-  
-  setRecommendations: (movies: Movie[]) => void
-  setRecommendationsLoading: (loading: boolean) => void
-  setRecommendationsError: (error: string | null) => void
-  
-  clearSearch: () => void
-  clearSelectedMovie: () => void
-  clearRecommendations: () => void
-  reset: () => void
+  setMovies: (data: SearchResponse) => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+
+  setSearchQuery: (query: string) => void;
+  setSearchResults: (data: SearchResponse) => void;
+  setSearchLoading: (loading: boolean) => void;
+  setSearchError: (error: string | null) => void;
+
+  setSelectedMovie: (movie: MovieDetails | null) => void;
+  setSelectedMovieLoading: (loading: boolean) => void;
+  setSelectedMovieError: (error: string | null) => void;
+
+  setRecommendations: (movies: Movie[]) => void;
+  setRecommendationsLoading: (loading: boolean) => void;
+  setRecommendationsError: (error: string | null) => void;
+
+  clearSearch: () => void;
+  clearSelectedMovie: () => void;
+  clearRecommendations: () => void;
+  reset: () => void;
 }
 
 export const useMovieStore = create<MovieState>((set) => ({
@@ -60,7 +59,7 @@ export const useMovieStore = create<MovieState>((set) => ({
   loading: false,
   error: null,
 
-  searchQuery: '',
+  searchQuery: "",
   searchResults: [],
   searchLoading: false,
   searchError: null,
@@ -84,14 +83,11 @@ export const useMovieStore = create<MovieState>((set) => ({
       error: null,
     }),
 
-  setLoading: (loading: boolean) =>
-    set({ loading }),
+  setLoading: (loading: boolean) => set({ loading }),
 
-  setError: (error: string | null) =>
-    set({ error, loading: false }),
+  setError: (error: string | null) => set({ error, loading: false }),
 
-  setSearchQuery: (query: string) =>
-    set({ searchQuery: query }),
+  setSearchQuery: (query: string) => set({ searchQuery: query }),
 
   setSearchResults: (data: SearchResponse) =>
     set({
@@ -100,8 +96,7 @@ export const useMovieStore = create<MovieState>((set) => ({
       searchError: null,
     }),
 
-  setSearchLoading: (loading: boolean) =>
-    set({ searchLoading: loading }),
+  setSearchLoading: (loading: boolean) => set({ searchLoading: loading }),
 
   setSearchError: (error: string | null) =>
     set({ searchError: error, searchLoading: false }),
@@ -134,7 +129,7 @@ export const useMovieStore = create<MovieState>((set) => ({
 
   clearSearch: () =>
     set({
-      searchQuery: '',
+      searchQuery: "",
       searchResults: [],
       searchLoading: false,
       searchError: null,
@@ -162,7 +157,7 @@ export const useMovieStore = create<MovieState>((set) => ({
       totalResults: 0,
       loading: false,
       error: null,
-      searchQuery: '',
+      searchQuery: "",
       searchResults: [],
       searchLoading: false,
       searchError: null,
@@ -173,5 +168,4 @@ export const useMovieStore = create<MovieState>((set) => ({
       recommendationsLoading: false,
       recommendationsError: null,
     }),
-}))
-
+}));

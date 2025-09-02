@@ -20,11 +20,13 @@ TMDB_API_KEY=your-tmdb-api-key
 ## Firebase Setup
 
 ### 1. Create a Firebase Project
+
 1. Go to [Firebase Console](https://console.firebase.google.com/)
 2. Click "Add project" and follow the setup wizard
 3. Give your project a name (e.g., "eyemax-app")
 
 ### 2. Enable Authentication
+
 1. In your Firebase project, go to "Authentication" in the left sidebar
 2. Click "Get started"
 3. Go to the "Sign-in method" tab
@@ -33,6 +35,7 @@ TMDB_API_KEY=your-tmdb-api-key
    - **Google**: Enable and configure OAuth consent screen
 
 ### 3. Get Firebase Configuration
+
 1. In your Firebase project, click the gear icon (⚙️) next to "Project Overview"
 2. Select "Project settings"
 3. Scroll down to "Your apps" section
@@ -41,6 +44,7 @@ TMDB_API_KEY=your-tmdb-api-key
 6. Copy the configuration object and add the values to your `.env.local` file
 
 ### 4. Create Demo User (Optional)
+
 1. In Firebase Authentication, go to "Users" tab
 2. Click "Add user"
 3. Create a user with:
@@ -48,6 +52,7 @@ TMDB_API_KEY=your-tmdb-api-key
    - **Password**: demo123
 
 ## TMDB API Setup
+
 1. Visit [TMDB](https://www.themoviedb.org/settings/api)
 2. Create an account and request an API key
 3. Add the API key to your `.env.local` file
@@ -55,11 +60,13 @@ TMDB_API_KEY=your-tmdb-api-key
 ## Running the Application
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
 
 2. Start the development server:
+
    ```bash
    npm run dev
    ```

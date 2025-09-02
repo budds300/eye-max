@@ -1,34 +1,34 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Navigation } from '@/components/Navigation'
-import { useAuth } from '@/contexts/AuthContext'
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { Mail, Lock, Eye, EyeOff, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Navigation } from "@/components/Navigation";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function SignIn() {
-  const router = useRouter()
-  const { signIn, signUp, signInWithDemo, currentUser, loading } = useAuth()
-  const [email, setEmail] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [isSignUp, setIsSignUp] = useState(false)
-  
+  const router = useRouter();
+  const { signIn, signUp, signInWithDemo, currentUser, loading } = useAuth();
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
+
   // Redirect authenticated users to home page
   useEffect(() => {
     if (!loading && currentUser) {
-      router.push('/')
+      router.push("/");
     }
-  }, [currentUser, loading, router])
-  
+  }, [currentUser, loading, router]);
+
   // Show loading while checking auth state
   if (loading) {
     return (
@@ -38,78 +38,84 @@ export default function SignIn() {
           <p className="text-gray-400">Loading...</p>
         </div>
       </div>
-    )
+    );
   }
-  
+
   // Don't render the form if user is already authenticated
   if (currentUser) {
-    return null
+    return null;
   }
 
   const handleDemoLogin = async () => {
-    setIsLoading(true)
-    setError('')
-    
+    setIsLoading(true);
+    setError("");
+
     try {
-      await signInWithDemo()
-      router.push('/')
+      await signInWithDemo();
+      router.push("/");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'Failed to sign in with demo account')
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to sign in with demo account",
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleCredentialsAuth = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError('')
-    
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
     // Validate passwords match for sign-up
     if (isSignUp && password !== confirmPassword) {
-      setError('Passwords do not match')
-      setIsLoading(false)
-      return
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
     }
 
     // Validate name fields for sign-up
     if (isSignUp && (!firstName.trim() || !lastName.trim())) {
-      setError('First name and last name are required')
-      setIsLoading(false)
-      return
+      setError("First name and last name are required");
+      setIsLoading(false);
+      return;
     }
-    
+
     try {
       if (isSignUp) {
-        await signUp(email, password, firstName.trim(), lastName.trim())
+        await signUp(email, password, firstName.trim(), lastName.trim());
       } else {
-        await signIn(email, password)
+        await signIn(email, password);
       }
-      router.push('/')
+      router.push("/");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : `Failed to ${isSignUp ? 'sign up' : 'sign in'}`)
+      setError(
+        error instanceof Error
+          ? error.message
+          : `Failed to ${isSignUp ? "sign up" : "sign in"}`,
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
-
-
+  };
 
   // Clear form when switching between sign in and sign up
   const toggleSignUpMode = () => {
-    setIsSignUp(!isSignUp)
-    setEmail('')
-    setFirstName('')
-    setLastName('')
-    setPassword('')
-    setConfirmPassword('')
-    setError('')
-  }
+    setIsSignUp(!isSignUp);
+    setEmail("");
+    setFirstName("");
+    setLastName("");
+    setPassword("");
+    setConfirmPassword("");
+    setError("");
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <Navigation />
-      
+
       <div className="container mx-auto px-4 py-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -117,42 +123,46 @@ export default function SignIn() {
           transition={{ duration: 0.5 }}
         >
           <div className="max-w-md mx-auto">
-          <div className="bg-gray-800 rounded-lg p-8 shadow-xl">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold mb-2">
-                {isSignUp ? 'Create Account' : 'Welcome Back'}
-              </h1>
-              <p className="text-gray-400">
-                {isSignUp ? 'Sign up for your EYEMAX account' : 'Sign in to your EYEMAX account'}
-              </p>
-            </div>
-
-            {error && (
-              <div className="bg-red-500 bg-opacity-20 border border-red-500 text-red-400 px-4 py-3 rounded-lg mb-6">
-                {error}
+            <div className="bg-gray-800 rounded-lg p-8 shadow-xl">
+              <div className="text-center mb-8">
+                <h1 className="text-3xl font-bold mb-2">
+                  {isSignUp ? "Create Account" : "Welcome Back"}
+                </h1>
+                <p className="text-gray-400">
+                  {isSignUp
+                    ? "Sign up for your EYEMAX account"
+                    : "Sign in to your EYEMAX account"}
+                </p>
               </div>
-            )}
 
-            {/* Demo Login Button */}
-            <Button
-              onClick={handleDemoLogin}
-              disabled={isLoading}
-              className="w-full bg-teal-500 hover:bg-teal-600 text-white mb-6"
-            >
-              {isLoading ? 'Signing in...' : 'Try Demo Account'}
-            </Button>
+              {error && (
+                <div className="bg-red-500 bg-opacity-20 border border-red-500 text-red-400 px-4 py-3 rounded-lg mb-6">
+                  {error}
+                </div>
+              )}
 
-            <div className="relative mb-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-600"></div>
+              {/* Demo Login Button */}
+              <Button
+                onClick={handleDemoLogin}
+                disabled={isLoading}
+                className="w-full bg-teal-500 hover:bg-teal-600 text-white mb-6"
+              >
+                {isLoading ? "Signing in..." : "Try Demo Account"}
+              </Button>
+
+              <div className="relative mb-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-600"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-gray-800 text-gray-400">
+                    Or continue with
+                  </span>
+                </div>
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gray-800 text-gray-400">Or continue with</span>
-              </div>
-            </div>
 
-            {/* Google Sign-In temporarily hidden - will be fixed later */}
-            {/* 
+              {/* Google Sign-In temporarily hidden - will be fixed later */}
+              {/* 
             <Button
               onClick={handleGoogleLogin}
               disabled={isLoading}
@@ -176,144 +186,177 @@ export default function SignIn() {
             </div>
             */}
 
-            {/* Credentials Form */}
-            <form onSubmit={handleCredentialsAuth} className="space-y-4">
-              {/* Name Fields - Only shown in sign-up mode */}
-              {isSignUp && (
-                <>
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-2">
-                      First Name
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input
-                        id="firstName"
-                        type="text"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                        placeholder="Enter your first name"
-                        required
-                      />
+              {/* Credentials Form */}
+              <form onSubmit={handleCredentialsAuth} className="space-y-4">
+                {/* Name Fields - Only shown in sign-up mode */}
+                {isSignUp && (
+                  <>
+                    <div>
+                      <label
+                        htmlFor="firstName"
+                        className="block text-sm font-medium text-gray-300 mb-2"
+                      >
+                        First Name
+                      </label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                        <input
+                          id="firstName"
+                          type="text"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                          placeholder="Enter your first name"
+                          required
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-300 mb-2">
-                      Last Name
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input
-                        id="lastName"
-                        type="text"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                        placeholder="Enter your last name"
-                        required
-                      />
+                    <div>
+                      <label
+                        htmlFor="lastName"
+                        className="block text-sm font-medium text-gray-300 mb-2"
+                      >
+                        Last Name
+                      </label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                        <input
+                          id="lastName"
+                          type="text"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                          className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                          placeholder="Enter your last name"
+                          required
+                        />
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                  Email
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                    placeholder="Enter your email"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-12 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                    placeholder="Enter your password"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
-                  >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Confirm Password Field - Only shown in sign-up mode */}
-              {isSignUp && (
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-2">
-                    Confirm Password
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-300 mb-2"
+                  >
+                    Email
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                      placeholder="Enter your email"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-300 mb-2"
+                  >
+                    Password
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       className="w-full pl-10 pr-12 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                      placeholder="Confirm your password"
+                      placeholder="Enter your password"
                       required
                     />
                     <button
                       type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
                     >
-                      {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
                     </button>
                   </div>
                 </div>
-              )}
 
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-teal-500 hover:bg-teal-600 text-white"
-              >
-                {isLoading ? (isSignUp ? 'Creating Account...' : 'Signing in...') : (isSignUp ? 'Sign Up' : 'Sign In')}
-              </Button>
-            </form>
+                {/* Confirm Password Field - Only shown in sign-up mode */}
+                {isSignUp && (
+                  <div>
+                    <label
+                      htmlFor="confirmPassword"
+                      className="block text-sm font-medium text-gray-300 mb-2"
+                    >
+                      Confirm Password
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <input
+                        id="confirmPassword"
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full pl-10 pr-12 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                        placeholder="Confirm your password"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className="w-5 h-5" />
+                        ) : (
+                          <Eye className="w-5 h-5" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                )}
 
-            <div className="mt-6 text-center">
-              <p className="text-gray-400 text-sm">
-                Demo credentials: demo@example.com / demo123
-              </p>
-              <button
-                onClick={toggleSignUpMode}
-                className="text-teal-400 hover:text-teal-300 text-sm mt-2"
-              >
-                {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
-              </button>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-teal-500 hover:bg-teal-600 text-white"
+                >
+                  {isLoading
+                    ? isSignUp
+                      ? "Creating Account..."
+                      : "Signing in..."
+                    : isSignUp
+                      ? "Sign Up"
+                      : "Sign In"}
+                </Button>
+              </form>
+
+              <div className="mt-6 text-center">
+                <p className="text-gray-400 text-sm">
+                  Demo credentials: demo@example.com / demo123
+                </p>
+                <button
+                  onClick={toggleSignUpMode}
+                  className="text-teal-400 hover:text-teal-300 text-sm mt-2"
+                >
+                  {isSignUp
+                    ? "Already have an account? Sign in"
+                    : "Don't have an account? Sign up"}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

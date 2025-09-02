@@ -1,26 +1,26 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect, useCallback } from 'react'
-import { Search, X } from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { useMovieStore } from '@/store/movieStore'
-import { movieService } from '@/services/MovieService'
+import React, { useState, useEffect, useCallback } from "react";
+import { Search, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useMovieStore } from "@/store/movieStore";
+import { movieService } from "@/services/MovieService";
 
 interface SearchBarProps {
-  onSearch?: (query: string) => void
-  placeholder?: string
-  className?: string
+  onSearch?: (query: string) => void;
+  placeholder?: string;
+  className?: string;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
-  placeholder = 'Search movies...',
-  className = '',
+  placeholder = "Search movies...",
+  className = "",
 }) => {
-  const [query, setQuery] = useState('')
-  const [isSearching, setIsSearching] = useState(false)
-  
+  const [query, setQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+
   const {
     searchQuery,
     setSearchQuery,
@@ -28,60 +28,69 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     setSearchLoading,
     setSearchError,
     clearSearch,
-  } = useMovieStore()
+  } = useMovieStore();
 
   // Debounced search function
   const debouncedSearch = useCallback(
     async (searchTerm: string) => {
       if (!searchTerm.trim()) {
-        clearSearch()
-        return
+        clearSearch();
+        return;
       }
 
-      setIsSearching(true)
-      setSearchLoading(true)
-      setSearchError(null)
+      setIsSearching(true);
+      setSearchLoading(true);
+      setSearchError(null);
 
       try {
-        const results = await movieService.searchMovies(searchTerm)
-        setSearchResults(results)
-        setSearchQuery(searchTerm)
-        onSearch?.(searchTerm)
+        const results = await movieService.searchMovies(searchTerm);
+        setSearchResults(results);
+        setSearchQuery(searchTerm);
+        onSearch?.(searchTerm);
       } catch (error) {
-        setSearchError(error instanceof Error ? error.message : 'Search failed')
+        setSearchError(
+          error instanceof Error ? error.message : "Search failed",
+        );
       } finally {
-        setIsSearching(false)
-        setSearchLoading(false)
+        setIsSearching(false);
+        setSearchLoading(false);
       }
     },
-    [setSearchResults, setSearchLoading, setSearchError, setSearchQuery, clearSearch, onSearch]
-  )
+    [
+      setSearchResults,
+      setSearchLoading,
+      setSearchError,
+      setSearchQuery,
+      clearSearch,
+      onSearch,
+    ],
+  );
 
   // Handle input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setQuery(value)
-    debounce(debouncedSearch, 500)(value)
-  }
+    const value = e.target.value;
+    setQuery(value);
+    debounce(debouncedSearch, 500)(value);
+  };
 
   // Handle clear search
   const handleClearSearch = () => {
-    setQuery('')
-    clearSearch()
-  }
+    setQuery("");
+    clearSearch();
+  };
 
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (query.trim()) {
-      debouncedSearch(query)
+      debouncedSearch(query);
     }
-  }
+  };
 
   // Initialize query from store
   useEffect(() => {
-    setQuery(searchQuery)
-  }, [searchQuery])
+    setQuery(searchQuery);
+  }, [searchQuery]);
 
   return (
     <form onSubmit={handleSubmit} className={`relative ${className}`}>
@@ -109,18 +118,17 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         )}
       </div>
     </form>
-  )
-}
+  );
+};
 
 // Debounce utility function
-function debounce<T extends (...args: unknown[]) => unknown>(
+function debounce<T extends (...args: any[]) => any>(
   func: T,
-  wait: number
+  wait: number,
 ): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout
+  let timeout: NodeJS.Timeout;
   return (...args: Parameters<T>) => {
-    clearTimeout(timeout)
-    timeout = setTimeout(() => func(...args), wait)
-  }
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
 }
-

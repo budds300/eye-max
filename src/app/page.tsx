@@ -1,48 +1,50 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import { SearchBar } from '@/components/SearchBar'
-import { MovieList } from '@/components/MovieList'
-import { MovieCarousel } from '@/components/MovieCarousel'
-import { TrendingSection } from '@/components/TrendingSection'
-import { Button } from '@/components/ui/button'
-import { useMovieStore } from '@/store/movieStore'
-import { movieService, Movie } from '@/services/MovieService'
-import { cn } from '@/lib/utils'
-import { PageLoader } from '@/components/ui/loader'
-import { LatestTVShows } from '@/components/LatestTVShows'
-import { Footer } from '@/components/Footer'
-import { Navigation } from '@/components/Navigation'
-import { useAuth } from '@/contexts/AuthContext'
+import React, { useState, useEffect } from "react";
+import { SearchBar } from "@/components/SearchBar";
+import { MovieList } from "@/components/MovieList";
+import { MovieCarousel } from "@/components/MovieCarousel";
+import { TrendingSection } from "@/components/TrendingSection";
+import { Button } from "@/components/ui/button";
+import { useMovieStore } from "@/store/movieStore";
+import { movieService, Movie } from "@/services/MovieService";
+import { cn } from "@/lib/utils";
+import { PageLoader } from "@/components/ui/loader";
+import { LatestTVShows } from "@/components/LatestTVShows";
+import { Footer } from "@/components/Footer";
+import { Navigation } from "@/components/Navigation";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
-  const { loading } = useAuth()
-  const [activeCategory, setActiveCategory] = useState<'popular' | 'top-rated' | 'now-playing'>('popular')
-  const { searchQuery } = useMovieStore()
-  const [carouselMovies, setCarouselMovies] = useState<Movie[]>([])
+  const { loading } = useAuth();
+  const [activeCategory, setActiveCategory] = useState<
+    "popular" | "top-rated" | "now-playing"
+  >("popular");
+  const { searchQuery } = useMovieStore();
+  const [carouselMovies, setCarouselMovies] = useState<Movie[]>([]);
 
   // Fetch movies for carousel
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await movieService.getTrendingMovies()
-        setCarouselMovies(response.results.slice(0, 5))
-                } catch {
+        const response = await movieService.getTrendingMovies();
+        setCarouselMovies(response.results.slice(0, 5));
+      } catch {
         // Handle error silently
       }
-    }
+    };
 
-    fetchMovies()
-  }, [])
+    fetchMovies();
+  }, []);
 
   const categories = [
-    { id: 'popular', label: 'Popular' },
-    { id: 'top-rated', label: 'Top Rated' },
-    { id: 'now-playing', label: 'Now Playing' },
-  ] as const
+    { id: "popular", label: "Popular" },
+    { id: "top-rated", label: "Top Rated" },
+    { id: "now-playing", label: "Now Playing" },
+  ] as const;
 
   if (loading) {
-    return <PageLoader message="Loading application..." />
+    return <PageLoader message="Loading application..." />;
   }
 
   return (
@@ -85,14 +87,16 @@ export default function Home() {
               {categories.map((category) => (
                 <Button
                   key={category.id}
-                  variant={activeCategory === category.id ? 'default' : 'outline'}
+                  variant={
+                    activeCategory === category.id ? "default" : "outline"
+                  }
                   size="sm"
                   onClick={() => setActiveCategory(category.id)}
                   className={cn(
                     "transition-all duration-200",
-                    activeCategory === category.id 
-                      ? "bg-teal-500 hover:bg-teal-600" 
-                      : "bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                    activeCategory === category.id
+                      ? "bg-teal-500 hover:bg-teal-600"
+                      : "bg-gray-700 border-gray-600 text-white hover:bg-gray-600",
                   )}
                 >
                   {category.label}
@@ -114,7 +118,7 @@ export default function Home() {
           ) : (
             <div>
               <h2 className="mb-6 text-2xl font-semibold text-white">
-                {categories.find(c => c.id === activeCategory)?.label} Movies
+                {categories.find((c) => c.id === activeCategory)?.label} Movies
               </h2>
               <MovieList category={activeCategory} />
             </div>
@@ -128,5 +132,5 @@ export default function Home() {
       {/* Footer */}
       <Footer />
     </div>
-  )
+  );
 }

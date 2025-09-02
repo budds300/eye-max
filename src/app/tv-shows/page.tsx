@@ -1,40 +1,42 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { SearchBar } from '@/components/SearchBar'
-import { TVShowList } from '@/components/TVShowList'
-import { Button } from '@/components/ui/button'
-import { useMovieStore } from '@/store/movieStore'
-import { movieService, TVShow } from '@/services/MovieService'
-import { cn } from '@/lib/utils'
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { SearchBar } from "@/components/SearchBar";
+import { TVShowList } from "@/components/TVShowList";
+import { Button } from "@/components/ui/button";
+import { useMovieStore } from "@/store/movieStore";
+import { movieService, TVShow } from "@/services/MovieService";
+import { cn } from "@/lib/utils";
 
-import { Navigation } from '@/components/Navigation'
-import { Footer } from '@/components/Footer'
+import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 
 export default function TVShowsPage() {
-  const { searchQuery } = useMovieStore()
-  const [activeCategory, setActiveCategory] = useState<'popular' | 'top-rated' | 'on-air'>('popular')
-  const [trendingShows, setTrendingShows] = useState<TVShow[]>([])
+  const { searchQuery } = useMovieStore();
+  const [activeCategory, setActiveCategory] = useState<
+    "popular" | "top-rated" | "on-air"
+  >("popular");
+  const [trendingShows, setTrendingShows] = useState<TVShow[]>([]);
 
   useEffect(() => {
     const fetchTrendingShows = async () => {
       try {
-        const response = await movieService.getTrendingTVShows()
-        setTrendingShows(response.results.slice(0, 5))
-                  } catch {
-          // Handle error silently
-        }
-    }
+        const response = await movieService.getTrendingTVShows();
+        setTrendingShows(response.results.slice(0, 5));
+      } catch {
+        // Handle error silently
+      }
+    };
 
-    fetchTrendingShows()
-  }, [])
+    fetchTrendingShows();
+  }, []);
 
   const categories = [
-    { id: 'popular', label: 'Popular' },
-    { id: 'top-rated', label: 'Top Rated' },
-    { id: 'on-air', label: 'On Air' },
-  ] as const
+    { id: "popular", label: "Popular" },
+    { id: "top-rated", label: "Top Rated" },
+    { id: "on-air", label: "On Air" },
+  ] as const;
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -84,14 +86,16 @@ export default function TVShowsPage() {
               {categories.map((category) => (
                 <Button
                   key={category.id}
-                  variant={activeCategory === category.id ? 'default' : 'outline'}
+                  variant={
+                    activeCategory === category.id ? "default" : "outline"
+                  }
                   size="sm"
                   onClick={() => setActiveCategory(category.id)}
                   className={cn(
                     "transition-all duration-200",
-                    activeCategory === category.id 
-                      ? "bg-teal-500 hover:bg-teal-600" 
-                      : "bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                    activeCategory === category.id
+                      ? "bg-teal-500 hover:bg-teal-600"
+                      : "bg-gray-700 border-gray-600 text-white hover:bg-gray-600",
                   )}
                 >
                   {category.label}
@@ -112,7 +116,8 @@ export default function TVShowsPage() {
           ) : (
             <div>
               <h2 className="mb-6 text-2xl font-semibold text-white">
-                {categories.find(c => c.id === activeCategory)?.label} TV Shows
+                {categories.find((c) => c.id === activeCategory)?.label} TV
+                Shows
               </h2>
               <TVShowList category={activeCategory} />
             </div>
@@ -122,5 +127,5 @@ export default function TVShowsPage() {
 
       <Footer />
     </div>
-  )
+  );
 }

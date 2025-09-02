@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import React from 'react'
-import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import React from "react";
+import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface PaginationProps {
-  currentPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
-  className?: string
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  className?: string;
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
@@ -19,41 +19,41 @@ export const Pagination: React.FC<PaginationProps> = ({
   className,
 }) => {
   const getVisiblePages = () => {
-    const delta = 2
-    const range = []
-    const rangeWithDots = []
+    const delta = 2;
+    const range = [];
+    const rangeWithDots = [];
 
     for (
       let i = Math.max(2, currentPage - delta);
       i <= Math.min(totalPages - 1, currentPage + delta);
       i++
     ) {
-      range.push(i)
+      range.push(i);
     }
 
     if (currentPage - delta > 2) {
-      rangeWithDots.push(1, '...')
+      rangeWithDots.push(1, "...");
     } else {
-      rangeWithDots.push(1)
+      rangeWithDots.push(1);
     }
 
-    rangeWithDots.push(...range)
+    rangeWithDots.push(...range);
 
     if (currentPage + delta < totalPages - 1) {
-      rangeWithDots.push('...', totalPages)
+      rangeWithDots.push("...", totalPages);
     } else {
-      rangeWithDots.push(totalPages)
+      rangeWithDots.push(totalPages);
     }
 
-    return rangeWithDots
-  }
+    return rangeWithDots;
+  };
 
-  const visiblePages = getVisiblePages()
+  const visiblePages = getVisiblePages();
 
-  if (totalPages <= 1) return null
+  if (totalPages <= 1) return null;
 
   return (
-    <div className={cn('flex items-center justify-center gap-2', className)}>
+    <div className={cn("flex items-center justify-center gap-2", className)}>
       {/* Previous Button */}
       <Button
         variant="outline"
@@ -70,13 +70,13 @@ export const Pagination: React.FC<PaginationProps> = ({
       <div className="flex items-center gap-1">
         {visiblePages.map((page, index) => (
           <React.Fragment key={index}>
-            {page === '...' ? (
+            {page === "..." ? (
               <div className="flex h-8 w-8 items-center justify-center">
                 <MoreHorizontal className="h-4 w-4" />
               </div>
             ) : (
               <Button
-                variant={currentPage === page ? 'default' : 'outline'}
+                variant={currentPage === page ? "default" : "outline"}
                 size="sm"
                 onClick={() => onPageChange(page as number)}
                 className="h-8 w-8 p-0"
@@ -100,15 +100,5 @@ export const Pagination: React.FC<PaginationProps> = ({
         <ChevronRight className="h-4 w-4" />
       </Button>
     </div>
-  )
-}
-
-
-
-
-
-
-
-
-
-
+  );
+};

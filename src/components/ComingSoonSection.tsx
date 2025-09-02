@@ -1,32 +1,31 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Loader2, ArrowRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { MovieCard } from '@/components/MovieCard'
-import { movieService, Movie } from '@/services/MovieService'
-
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Loader2, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { MovieCard } from "@/components/MovieCard";
+import { movieService, Movie } from "@/services/MovieService";
 
 export const ComingSoonSection: React.FC = () => {
-  const [movies, setMovies] = useState<Movie[]>([])
-  const [loading, setLoading] = useState(false)
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUpcomingMovies = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
-        const response = await movieService.getUpcomingMovies()
-        setMovies(response.results)
-                  } catch {
-          // Handle error silently
-        } finally {
-        setLoading(false)
+        const response = await movieService.getUpcomingMovies();
+        setMovies(response.results);
+      } catch {
+        // Handle error silently
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
-    fetchUpcomingMovies()
-  }, [])
+    fetchUpcomingMovies();
+  }, []);
 
   return (
     <section className="space-y-6">
@@ -66,13 +65,5 @@ export const ComingSoonSection: React.FC = () => {
         </div>
       )}
     </section>
-  )
-}
-
-
-
-
-
-
-
-
+  );
+};

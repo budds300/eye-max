@@ -1,43 +1,41 @@
-'use client'
+"use client";
 
-import React from 'react'
-import Link from 'next/link'
-import { Github, Linkedin, Mail, Heart, ExternalLink } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import React from "react";
+import Link from "next/link";
+import { Github, Linkedin, Mail, Heart, ExternalLink } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const Footer: React.FC = () => {
-  const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
 
   const quickLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'Movies', href: '/#movies' },
-    { name: 'TV Shows', href: '/#tv-shows' },
-    { name: 'Upcoming', href: '/upcoming' },
-    { name: 'Trending', href: '/#trending' },
-  ]
-
-
+    { name: "Home", href: "/" },
+    { name: "Movies", href: "/#movies" },
+    { name: "TV Shows", href: "/#tv-shows" },
+    { name: "Upcoming", href: "/upcoming" },
+    { name: "Trending", href: "/#trending" },
+  ];
 
   const socialLinks = [
     {
-      name: 'GitHub',
-      href: 'https://github.com/budds300',
+      name: "GitHub",
+      href: "https://github.com/budds300",
       icon: Github,
-      color: 'hover:text-gray-400'
+      color: "hover:text-gray-400",
     },
     {
-      name: 'LinkedIn',
-      href: 'https://linkedin.com/in/tamminga-budds',
+      name: "LinkedIn",
+      href: "https://linkedin.com/in/tamminga-budds",
       icon: Linkedin,
-      color: 'hover:text-blue-400'
+      color: "hover:text-blue-400",
     },
     {
-      name: 'Email',
-      href: 'mailto:contact@eyemax.com',
+      name: "Email",
+      href: "mailto:contact@eyemax.com",
       icon: Mail,
-      color: 'hover:text-red-400'
-    }
-  ]
+      color: "hover:text-red-400",
+    },
+  ];
 
   return (
     <footer className="bg-gray-900 border-t border-gray-800">
@@ -51,13 +49,14 @@ export const Footer: React.FC = () => {
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Your ultimate destination for movies and TV shows. Discover, watch, and enjoy the latest entertainment content.
+              Your ultimate destination for movies and TV shows. Discover,
+              watch, and enjoy the latest entertainment content.
             </p>
-                                <div className="flex items-center space-x-2 text-gray-400 text-sm">
-                      <span>Made with</span>
-                      <Heart className="w-4 h-4 text-red-500 fill-current" />
-                      <span>by Tamminga Budds</span>
-                    </div>
+            <div className="flex items-center space-x-2 text-gray-400 text-sm">
+              <span>Made with</span>
+              <Heart className="w-4 h-4 text-red-500 fill-current" />
+              <span>by Tamminga Budds</span>
+            </div>
           </div>
 
           {/* Quick Links */}
@@ -66,7 +65,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.name}>
-                  <Link 
+                  <Link
                     href={link.href}
                     className="text-gray-400 hover:text-teal-400 transition-colors text-sm flex items-center space-x-1"
                   >
@@ -77,8 +76,6 @@ export const Footer: React.FC = () => {
               ))}
             </ul>
           </div>
-
-
 
           {/* Social Links */}
           <div className="space-y-4">
@@ -92,7 +89,7 @@ export const Footer: React.FC = () => {
                   rel="noopener noreferrer"
                   className={cn(
                     "w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 transition-all duration-200 hover:scale-110",
-                    social.color
+                    social.color,
                   )}
                   title={social.name}
                 >
@@ -101,9 +98,9 @@ export const Footer: React.FC = () => {
               ))}
             </div>
             <div className="space-y-2">
-                                    <p className="text-gray-400 text-sm">
-                        <strong>Developer:</strong> Tamminga Budds
-                      </p>
+              <p className="text-gray-400 text-sm">
+                <strong>Developer:</strong> Tamminga Budds
+              </p>
               <p className="text-gray-400 text-sm">
                 <strong>GitHub:</strong> @budds300
               </p>
@@ -135,5 +132,5 @@ export const Footer: React.FC = () => {
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};

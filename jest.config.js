@@ -1,12 +1,12 @@
-import nextJest from 'next/jest'
+import nextJest from "next/jest";
 
 const createJestConfig = nextJest({
-  dir: './',
-})
+  dir: "./",
+});
 
 const customJestConfig = {
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jsdom',
-}
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  testEnvironment: "jsdom",
+};
 
-export default createJestConfig(customJestConfig)
+export default createJestConfig(customJestConfig);

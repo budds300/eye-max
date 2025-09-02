@@ -1,26 +1,26 @@
-'use client'
+"use client";
 
-import React from 'react'
-import { TVShowDetails } from '@/components/TVShowDetails'
-import { Navigation } from '@/components/Navigation'
-import { Footer } from '@/components/Footer'
+import React from "react";
+import { TVShowDetails } from "@/components/TVShowDetails";
+import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 
 interface TVShowPageProps {
   params: Promise<{
-    id: string
-  }>
+    id: string;
+  }>;
 }
 
 export default function TVShowPage({ params }: TVShowPageProps) {
-  const resolvedParams = React.use(params)
-  const tvShowId = parseInt(resolvedParams.id)
+  const resolvedParams = React.use(params);
+  const tvShowId = parseInt(resolvedParams.id);
 
   if (isNaN(tvShowId)) {
     return (
       <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
         <div className="text-xl">Invalid TV Show ID</div>
       </div>
-    )
+    );
   }
 
   return (
@@ -29,13 +29,5 @@ export default function TVShowPage({ params }: TVShowPageProps) {
       <TVShowDetails tvShowId={tvShowId} />
       <Footer />
     </div>
-  )
+  );
 }
-
-
-
-
-
-
-
-
