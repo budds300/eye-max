@@ -13,6 +13,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
+import { Toast } from "@/components/ui/toast";
 
 interface AuthContextType {
   currentUser: User | null;
@@ -42,6 +43,26 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+    isVisible: boolean;
+  }>({
+    message: "",
+    type: "success",
+    isVisible: false,
+  });
+
+  const showToast = (
+    message: string,
+    type: "success" | "error" = "success",
+  ) => {
+    setToast({ message, type, isVisible: true });
+  };
+
+  const hideToast = () => {
+    setToast((prev) => ({ ...prev, isVisible: false }));
+  };
 
   function signUp(
     email: string,
@@ -60,6 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           displayName: `${firstName} ${lastName}`,
           photoURL: null,
         });
+        showToast("Account created successfully! Welcome to EyeMax!");
         return userCredential;
       },
     );
@@ -69,7 +91,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!auth) {
       return Promise.reject(new Error("Firebase not initialized"));
     }
-    return signInWithEmailAndPassword(auth, email, password);
+    return signInWithEmailAndPassword(auth, email, password).then(
+      (userCredential) => {
+        showToast("Welcome back! You've been signed in successfully.");
+        return userCredential;
+      },
+    );
   }
 
   function logout() {
@@ -77,13 +104,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (currentUser?.providerId === "demo") {
       setCurrentUser(null);
       setLoading(false);
+      showToast("Demo session ended. Thanks for trying EyeMax!");
       return Promise.resolve();
     }
     // For real Firebase users, use Firebase signOut
     if (!auth) {
       return Promise.reject(new Error("Firebase not initialized"));
     }
-    return signOut(auth);
+    return signOut(auth).then(() => {
+      showToast("You've been signed out successfully. Come back soon!");
+    });
   }
 
   function signInWithGoogle() {
@@ -129,6 +159,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setCurrentUser(demoUser);
       setLoading(false);
+      showToast("Demo mode activated! Explore EyeMax features.");
       resolve();
     });
   }
@@ -139,10 +170,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => {
+        setCurrentUser(user);
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Auth state change error:", error);
+        setLoading(false);
+      },
+    );
 
     // Handle redirect result for Google sign-in
     getRedirectResult(auth)
@@ -150,6 +188,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (result) {
           // User successfully signed in with Google
           // The user will be automatically set by onAuthStateChanged above
+          showToast("Welcome! You've been signed in with Google.");
           // Redirect to home page after successful Google sign-in
           if (typeof window !== "undefined") {
             // Use router.push instead of window.location for better Next.js integration
@@ -159,8 +198,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         }
       })
-      .catch(() => {
-        // Handle error silently
+      .catch((error) => {
+        console.warn("Google sign-in redirect error:", error);
+        // Handle error silently but log it for debugging
       });
 
     return unsubscribe;
@@ -179,6 +219,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext.Provider value={value}>
       {!loading && children}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={hideToast}
+        duration={4000}
+      />
     </AuthContext.Provider>
   );
 }
