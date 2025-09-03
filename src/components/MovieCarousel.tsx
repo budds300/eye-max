@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Play, Star, Clock } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Movie } from "@/services/MovieService";
 import { movieService } from "@/services/MovieService";
@@ -53,15 +52,20 @@ export const MovieCarousel: React.FC<MovieCarouselProps> = ({
     return Math.abs(offset) * velocity;
   };
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
   const paginate = (newDirection: number) => {
     setDirection(newDirection);
     setCurrentIndex(
       (prev) => (prev + newDirection + movies.length) % movies.length,
     );
-  };
-
-  const formatRating = (rating: number) => {
-    return rating.toFixed(1);
   };
 
   if (!movies.length) return null;
@@ -126,48 +130,51 @@ export const MovieCarousel: React.FC<MovieCarouselProps> = ({
             </div>
 
             {/* Content */}
-            <div className="absolute inset-0 flex items-center">
+            <div className="absolute inset-0 flex items-end pb-20">
               <div className="container mx-auto px-4">
                 <div className="max-w-2xl">
-                  {/* Movie Title */}
-                  <h1 className="text-5xl font-bold mb-6 text-white">
-                    {currentMovie.title}
-                  </h1>
+                  <motion.div
+                    variants={fadeInUp}
+                    initial="hidden"
+                    animate="visible"
+                  >
+                    <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-2xl">
+                      {currentMovie.title}
+                    </h1>
+                  </motion.div>
 
-                  {/* Metadata Bar */}
-                  <div className="flex items-center space-x-6 mb-6">
-                    <span className="px-3 py-1 rounded text-sm font-bold bg-teal-500">
-                      HD
+                  <div className="flex items-center gap-4 mb-4 text-white/80">
+                    <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
+                      {new Date(currentMovie.release_date).getFullYear()}
                     </span>
-                    <div className="flex items-center space-x-2 text-white">
-                      <Clock className="w-4 h-4" />
-                      <span>Duration: 156min</span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-white">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span>
-                        IMDB: {formatRating(currentMovie.vote_average)}
-                      </span>
-                    </div>
-                    <div className="text-white">
-                      <span>Genre: Action, Drama</span>
-                    </div>
+                    <span className="flex items-center gap-1">
+                      <span className="text-yellow-400">★</span>
+                      {currentMovie.vote_average.toFixed(1)}
+                    </span>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-gray-300 text-lg mb-8 leading-relaxed max-w-xl">
-                    {currentMovie.overview.length > 200
-                      ? `${currentMovie.overview.substring(0, 200)}...`
-                      : currentMovie.overview}
-                  </p>
+                  <motion.div
+                    variants={fadeInUp}
+                    initial="hidden"
+                    animate="visible"
+                    transition={{ delay: 0.2 }}
+                  >
+                    <p className="text-lg text-white/90 mb-6 drop-shadow-lg leading-relaxed">
+                      {currentMovie.overview}
+                    </p>
+                  </motion.div>
 
-                  {/* Watch Now Button */}
-                  <Link href={`/movie/${currentMovie.id}`}>
-                    <Button className="bg-teal-500 hover:bg-teal-600 text-white px-8 py-3 rounded-lg text-lg font-semibold flex items-center space-x-2">
-                      <Play className="w-5 h-5" />
-                      <span>Watch now</span>
-                    </Button>
-                  </Link>
+                  <motion.div
+                    variants={fadeInUp}
+                    initial="hidden"
+                    animate="visible"
+                    transition={{ delay: 0.4 }}
+                  >
+                    <button className="bg-teal-500 hover:bg-teal-600 text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-teal-500/25 group">
+                      <Play className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+                      Watch now
+                    </button>
+                  </motion.div>
                 </div>
               </div>
             </div>

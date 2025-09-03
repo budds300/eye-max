@@ -6,14 +6,29 @@ import {
 } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_FIREBASE_API_KEY || "dummy-key",
-  authDomain: process.env.NEXT_FIREBASE_AUTH_DOMAIN || "dummy-domain",
-  projectId: process.env.NEXT_FIREBASE_PROJECT_ID || "dummy-project",
-  storageBucket: process.env.NEXT_FIREBASE_STORAGE_BUCKET || "dummy-bucket",
-  messagingSenderId: process.env.NEXT_FIREBASE_MESSAGING_SENDER_ID || "123456789",
-  appId: process.env.NEXT_FIREBASE_APP_ID || "dummy-app-id",
-  measurementId: process.env.NEXT_FIREBASE_MEASUREMENT_ID || "dummy-measurement",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "dummy-key",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "dummy-domain",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "dummy-project",
+  storageBucket:
+    process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "dummy-bucket",
+  messagingSenderId:
+    process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "123456789",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "dummy-app-id",
+  measurementId:
+    process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "dummy-measurement",
 };
+
+// Debug: Log environment variables (only in development)
+if (process.env.NODE_ENV === "development") {
+  console.log("Firebase Config Check:", {
+    hasApiKey: !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    hasAuthDomain: !!process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    hasProjectId: !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? "***" : "missing",
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "missing",
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "missing",
+  });
+}
 
 // Initialize Firebase only if not already initialized and in browser environment
 let app: ReturnType<typeof initializeApp> | null = null;
@@ -25,7 +40,7 @@ if (typeof window !== "undefined" && !getApps().length) {
     app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     googleProvider = new GoogleAuthProvider();
-    
+
     // Configure Google Sign-In settings
     googleProvider.setCustomParameters({
       prompt: "select_account", // Forces account selection even when one account is available
